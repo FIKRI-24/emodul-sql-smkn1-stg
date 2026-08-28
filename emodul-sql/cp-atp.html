@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CP & ATP — E-Modul Interaktif SQL</title>
+  <meta name="description" content="Capaian Pembelajaran dan Alur Tujuan Pembelajaran — SMK Negeri 1 Sintuk Toboh Gadang">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.1">
+  <style>
+    .page-wrapper {
+      min-height: 100vh;
+      background: var(--bg-body);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-2xl);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-light);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-weight: 800;
+      font-size: var(--fs-md);
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .navbar-brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--fs-xs);
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .content-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: var(--space-2xl) var(--space-xl);
+      width: 100%;
+      flex: 1;
+    }
+
+    .page-header {
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      margin-bottom: var(--space-xl);
+      box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .info-card {
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      margin-bottom: var(--space-xl);
+      box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .info-card h2 {
+      font-size: var(--fs-xl);
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .atp-item {
+      padding: var(--space-lg);
+      background: hsl(220, 20%, 98%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+      margin-bottom: var(--space-md);
+      font-size: var(--fs-sm);
+      line-height: 1.6;
+    }
+
+    .atp-badge {
+      display: inline-block;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      background: var(--primary-subtle);
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+    }
+
+    .action-bar-complete {
+      background: #ffffff;
+      border: 2px solid var(--secondary);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      text-align: center;
+      box-shadow: 0 8px 30px -4px rgba(16, 185, 129, 0.15);
+      margin-top: var(--space-2xl);
+    }
+
+    .btn-3d-icon,
+    .btn img {
+      width: 22px !important;
+      height: 22px !important;
+      max-width: 22px !important;
+      max-height: 22px !important;
+      object-fit: contain !important;
+      vertical-align: middle !important;
+      display: inline-block !important;
+      flex-shrink: 0 !important;
+    }
+
+    @media (max-width: 768px) {
+      .navbar { padding: var(--space-sm) var(--space-md); }
+      .content-container { padding: var(--space-md); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-spinner"></div>
+      <p style="color:var(--text-secondary);font-weight:500;">Memeriksa Prasyarat Pembelajaran…</p>
+    </div>
+
+    <!-- Lock Screen (Jika belum selesai Panduan) -->
+    <div id="locked-screen" class="gated-screen" style="display:none;">
+      <div class="gated-card">
+        <div class="gated-icon-wrap">
+          <img src="assets/images/3d-icons/warning.png" alt="Terkunci">
+        </div>
+        <span class="badge badge-warning" style="margin-bottom:8px;">Tahap Prasyarat Belum Selesai</span>
+        <h2 style="font-size:var(--fs-xl);font-weight:900;margin-bottom:8px;color:var(--text-primary);">Halaman CP & ATP Terkunci</h2>
+        <p style="color:var(--text-secondary);font-size:var(--fs-sm);line-height:1.6;margin-bottom:var(--space-xl);">
+          Sesuai alur pembelajaran e-modul, Anda diwajibkan membaca dan memahami <strong>Petunjuk Penggunaan Modul</strong> terlebih dahulu sebelum membuka halaman ini.
+        </p>
+        <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
+          <a href="panduan.html" class="btn btn-primary">
+            <img src="assets/images/3d-icons/book.png" class="btn-3d-icon" alt="">
+            Buka Petunjuk Penggunaan Sekarang →
+          </a>
+          <a href="beranda.html" class="btn btn-secondary">
+            Kembali ke Beranda
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content CP/ATP -->
+    <div id="app-content" style="display:none;">
+      <!-- Navbar -->
+      <nav class="navbar">
+        <a href="beranda.html" class="navbar-brand">
+          <div class="navbar-brand-icon">SQL</div>
+          <div>
+            <div style="line-height:1.1;">E-Modul SQL</div>
+            <div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px;">SMKN 1 SINTUK TOBOH GADANG</div>
+          </div>
+        </a>
+        <a href="beranda.html" class="btn btn-secondary btn-sm">← Kembali ke Beranda</a>
+      </nav>
+
+      <main class="content-container">
+
+        <!-- Header -->
+        <div class="page-header">
+          <span class="badge badge-primary" style="margin-bottom:8px;">
+            <img src="assets/images/3d-icons/target.png" style="width:16px;height:16px;object-fit:contain;" alt="">
+            Kurikulum Merdeka SMK
+          </span>
+          <h1 style="font-size:var(--fs-2xl);font-weight:900;margin-bottom:6px;color:var(--text-primary);">Capaian & Alur Tujuan Pembelajaran (CP & ATP)</h1>
+          <p style="color:var(--text-secondary);margin:0;line-height:1.6;">
+            Mata Pelajaran Basis Data — Fase F / Kelas XI Program Keahlian Rekayasa Perangkat Lunak (RPL) SMK Negeri 1 Sintuk Toboh Gadang.
+          </p>
+        </div>
+
+        <!-- Capaian Pembelajaran -->
+        <section class="info-card">
+          <h2>
+            <img src="assets/images/3d-icons/trophy.png" style="width:28px;height:28px;object-fit:contain;" alt="">
+            Capaian Pembelajaran (CP) Elemen Basis Data
+          </h2>
+          <p style="line-height: 1.7; color: var(--text-secondary);">
+            Pada akhir fase F, peserta didik mampu mengidentifikasi dan membedakan jenis-jenis perintah <strong>SQL (Structured Query Language)</strong>, memahami instalasi perangkat lunak basis data relasional (DBMS XAMPP/MySQL), serta mampu menerapkan sintaks <strong>Data Definition Language (DDL)</strong>, <strong>Data Manipulation Language (DML)</strong>, dan <strong>Data Control Language (DCL)</strong> untuk perancangan, pengelolaan, dan pengamanan basis data relasional dalam pengembangan perangkat lunak.
+          </p>
+        </section>
+
+        <!-- Alur Tujuan Pembelajaran -->
+        <section class="info-card">
+          <h2>
+            <img src="assets/images/3d-icons/target.png" style="width:28px;height:28px;object-fit:contain;" alt="">
+            Alur Tujuan Pembelajaran (ATP) per Kegiatan Belajar
+          </h2>
+
+          <div class="atp-item">
+            <span class="atp-badge">Tahap 1 • Kegiatan Belajar 1</span>
+            <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: var(--fs-base);">Pengenalan SQL, XAMPP, dan Data Definition Language (DDL)</h4>
+            <p style="margin: 0; color: var(--text-secondary);">
+              Peserta didik mampu memahami sejarah SQL, melakukan instalasi server MySQL pada XAMPP, membuat database dan tabel, serta memodifikasi struktur data menggunakan perintah <code>CREATE</code>, <code>ALTER</code>, <code>RENAME</code>, dan <code>DROP</code>.
+            </p>
+          </div>
+
+          <div class="atp-item">
+            <span class="atp-badge">Tahap 2 • Kegiatan Belajar 2</span>
+            <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: var(--fs-base);">Pengelolaan Record dengan Data Manipulation Language (DML)</h4>
+            <p style="margin: 0; color: var(--text-secondary);">
+              Peserta didik mampu melakukan manipulasi data relasional meliputi penambahan baris (<code>INSERT INTO</code>), penyeleksian dan pemfilteran data (<code>SELECT</code>, <code>WHERE</code>, pola <code>LIKE</code>), serta pengubahan (<code>UPDATE</code>) dan penghapusan data (<code>DELETE</code>).
+            </p>
+          </div>
+
+          <div class="atp-item">
+            <span class="atp-badge">Tahap 3 • Kegiatan Belajar 3</span>
+            <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: var(--fs-base);">Pengamanan Akses dengan Data Control Language (DCL) & Praktik Mandiri</h4>
+            <p style="margin: 0; color: var(--text-secondary);">
+              Peserta didik mampu menerapkan keamanan basis data relasional dengan membuat akun pengguna baru (<code>CREATE USER</code>), memberikan hak akses (<code>GRANT</code>), dan mencabut hak akses (<code>REVOKE</code>) serta menguji seluruh query pada simulator SQL.
+            </p>
+          </div>
+        </section>
+
+        <!-- Action Box: Konfirmasi Selesai Memahami CP/ATP -->
+        <div class="action-bar-complete">
+          <h3 style="font-size:var(--fs-lg);font-weight:800;color:var(--text-primary);margin-bottom:6px;">
+            Target Kompetensi Telah Dipahami?
+          </h3>
+          <p style="color:var(--text-secondary);font-size:var(--fs-sm);margin:0 auto var(--space-lg) auto;max-width:540px;">
+            Klik tombol di bawah untuk mengonfirmasi pemahaman CP/ATP. Tahap <strong>Kegiatan Belajar 1</strong> akan langsung terbuka untuk dipelajari.
+          </p>
+          <button class="btn btn-success btn-lg" id="btn-selesai-cpatp" style="background:linear-gradient(135deg,var(--secondary),var(--secondary-light));">
+            <img src="assets/images/3d-icons/check.png" class="btn-3d-icon" style="width:22px;height:22px;max-width:22px;max-height:22px;object-fit:contain;vertical-align:middle;display:inline-block;" alt="">
+            <span>Saya Telah Memahami CP/ATP — Buka Kegiatan Belajar 1 →</span>
+          </button>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Auth Guard & Gating Check -->
+  <script type="module">
+    import { authReady } from "./assets/js/auth-guard.js";
+    import { db, doc, getDoc, setDoc } from "./assets/js/firebase-config.js";
+
+    authReady.then(async (userData) => {
+      const loadingScreen = document.getElementById("loading-screen");
+      const lockedScreen = document.getElementById("locked-screen");
+      const appContent = document.getElementById("app-content");
+      const btnSelesai = document.getElementById("btn-selesai-cpatp");
+
+      // Role Guru bypasses lock
+      if (userData.role === "guru") {
+        loadingScreen.style.display = "none";
+        appContent.style.display = "block";
+        initBtn();
+        return;
+      }
+
+      // Siswa: Cek apakah sudah menyelesaikan Panduan
+      try {
+        const ref = doc(db, "progres", userData.uid);
+        const snap = await getDoc(ref);
+        const isPanduanDone = snap.exists() && !!snap.data().panduanSelesai;
+
+        loadingScreen.style.display = "none";
+
+        if (!isPanduanDone) {
+          lockedScreen.style.display = "flex";
+        } else {
+          appContent.style.display = "block";
+          initBtn();
+        }
+      } catch (err) {
+        console.warn("[CP-ATP] Gagal cek panduan:", err);
+        loadingScreen.style.display = "none";
+        appContent.style.display = "block";
+        initBtn();
+      }
+
+      function initBtn() {
+        btnSelesai.addEventListener("click", async () => {
+          btnSelesai.disabled = true;
+          btnSelesai.textContent = "Menyimpan progres…";
+
+          try {
+            await setDoc(doc(db, "progres", userData.uid), {
+              cpatpSelesai: true,
+              updatedAt: new Date()
+            }, { merge: true });
+
+            window.location.href = "kegiatan/kegiatan-1.html";
+          } catch (err) {
+            console.error("Gagal simpan progres CP/ATP:", err);
+            window.location.href = "kegiatan/kegiatan-1.html";
+          }
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

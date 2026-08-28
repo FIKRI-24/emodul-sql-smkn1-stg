@@ -1,0 +1,15 @@
+{
+  "name": "emodul-sql",
+  "version": "1.0.0",
+  "description": "E-Modul Interaktif SQL - SMK Negeri 1 Sintuk Toboh Gadang",
+  "main": "index.html",
+  "scripts": {
+    "seed": "node scripts/seed-users.js",
+    "seed-content": "node scripts/seed-content.js"
+  },
+  "dependencies": {
+    "firebase": "^12.17.1",
+    "firebase-admin": "^12.1.0",
+    "sql.js": "^1.14.2"
+  }
+}

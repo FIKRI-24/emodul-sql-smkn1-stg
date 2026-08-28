@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hasil Evaluasi — E-Modul Interaktif SQL</title>
+  <meta name="description" content="Hasil evaluasi kuis SQL — SMK Negeri 1 Sintuk Toboh Gadang">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.1">
+  <style>
+    .page-wrapper {
+      min-height: 100vh;
+      background: var(--bg-body);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-2xl);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-weight: 800;
+      font-size: var(--fs-md);
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .navbar-brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--fs-xs);
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .content-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: var(--space-2xl) var(--space-xl);
+      width: 100%;
+      flex: 1;
+    }
+
+    .btn-3d-icon,
+    .btn img {
+      width: 20px !important;
+      height: 20px !important;
+      max-width: 20px !important;
+      max-height: 20px !important;
+      object-fit: contain !important;
+      vertical-align: middle !important;
+      display: inline-block !important;
+      flex-shrink: 0 !important;
+      margin-right: 6px;
+    }
+
+    .badge-3d-icon,
+    .badge img {
+      width: 16px !important;
+      height: 16px !important;
+      max-width: 16px !important;
+      max-height: 16px !important;
+      object-fit: contain !important;
+      vertical-align: middle !important;
+      display: inline-block !important;
+      flex-shrink: 0 !important;
+      margin-right: 4px;
+    }
+
+    /* Loading */
+    .loading-screen {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .loading-spinner {
+      width: 44px;
+      height: 44px;
+      border: 3.5px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== Score Display Card ===== */
+    .score-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-circle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      margin: 0 auto var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.15);
+      color: #ffffff;
+    }
+
+    .score-circle.excellent {
+      background: linear-gradient(135deg, hsl(152, 65%, 40%), hsl(165, 80%, 45%));
+    }
+
+    .score-circle.good {
+      background: linear-gradient(135deg, hsl(205, 85%, 45%), hsl(231, 68%, 52%));
+    }
+
+    .score-circle.average {
+      background: linear-gradient(135deg, hsl(38, 92%, 50%), hsl(30, 90%, 55%));
+    }
+
+    .score-circle.poor {
+      background: linear-gradient(135deg, hsl(356, 75%, 50%), hsl(0, 72%, 60%));
+    }
+
+    .score-value {
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .score-label {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      letter-spacing: 1px;
+      opacity: 0.9;
+    }
+
+    .score-message {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 18px;
+      border-radius: var(--radius-full);
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      margin-top: var(--space-md);
+    }
+
+    .score-message.excellent { background: var(--success-subtle); color: var(--success); }
+    .score-message.good      { background: var(--info-subtle); color: var(--info); }
+    .score-message.average   { background: var(--warning-subtle); color: hsl(35, 90%, 38%); }
+    .score-message.poor      { background: var(--error-subtle); color: var(--error); }
+
+    /* ===== Review Section ===== */
+    .review-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .review-item {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .review-item.correct {
+      border-color: hsla(152, 65%, 40%, 0.4);
+      background: linear-gradient(135deg, hsla(152, 65%, 40%, 0.02), #ffffff);
+    }
+
+    .review-item.wrong {
+      border-color: hsla(356, 75%, 56%, 0.4);
+      background: linear-gradient(135deg, hsla(356, 75%, 56%, 0.02), #ffffff);
+    }
+
+    .review-item-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-md);
+    }
+
+    .review-item-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--fs-xs);
+      font-weight: 800;
+    }
+
+    .review-item.correct .review-item-badge {
+      background: var(--success-subtle);
+      color: var(--success);
+    }
+
+    .review-item.wrong .review-item-badge {
+      background: var(--error-subtle);
+      color: var(--error);
+    }
+
+    .review-answer {
+      font-size: var(--fs-sm);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-xs);
+    }
+
+    .review-answer.user-answer-correct {
+      background: var(--success-subtle);
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .review-answer.user-answer-wrong {
+      background: var(--error-subtle);
+      color: var(--error);
+      font-weight: 600;
+    }
+
+    .review-answer.correct-answer {
+      background: var(--success-subtle);
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    /* Bottom Actions */
+    .result-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      margin-top: var(--space-2xl);
+      padding-top: var(--space-xl);
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .navbar { padding: var(--space-sm) var(--space-md); }
+      .content-container { padding: var(--space-md); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <!-- Loading -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-spinner"></div>
+      <p style="color:var(--text-secondary);font-weight:500;">Memuat Rekap Hasil Evaluasi…</p>
+    </div>
+
+    <div id="app-content" style="display: none;">
+
+      <!-- Navbar -->
+      <nav class="navbar">
+        <a href="beranda.html" class="navbar-brand">
+          <div class="navbar-brand-icon">SQL</div>
+          <div>
+            <div style="line-height:1.1;">E-Modul SQL</div>
+            <div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px;">SMKN 1 SINTUK TOBOH GADANG</div>
+          </div>
+        </a>
+        <a href="beranda.html" class="btn btn-secondary btn-sm">← Kembali ke Beranda</a>
+      </nav>
+
+      <main class="content-container">
+
+        <!-- Score section -->
+        <div id="score-section" class="score-card" style="display:none;">
+          <span class="badge badge-primary" style="margin-bottom:var(--space-md);">
+            <img src="assets/images/3d-icons/chart.png" class="badge-3d-icon" alt="">
+            Rekap Ujian Akhir Siswa
+          </span>
+          
+          <div class="score-circle" id="score-circle">
+            <span class="score-value" id="score-value">0</span>
+            <span class="score-label">NILAI AKHIR</span>
+          </div>
+
+          <h1 id="result-title" style="font-size:var(--fs-2xl);font-weight:800;margin-bottom:4px;">Hasil Evaluasi</h1>
+          <p class="score-summary" id="score-summary" style="font-size:var(--fs-base);color:var(--text-secondary);margin:0;"></p>
+          <div class="score-message" id="score-message"></div>
+        </div>
+
+        <!-- Review section -->
+        <div id="review-section" style="display:none;">
+          <div class="review-header">
+            <div>
+              <h2 style="font-size:var(--fs-xl);font-weight:800;margin:0;display:flex;align-items:center;gap:8px;">
+                <img src="assets/images/3d-icons/clipboard.png" style="width:28px;height:28px;object-fit:contain;" alt="">
+                Pembahasan Soal & Kunci Jawaban
+              </h2>
+              <p style="color:var(--text-secondary);font-size:var(--fs-sm);margin:0;">Tinjau rincian setiap pertanyaan berikut untuk meningkatkan pemahaman Anda:</p>
+            </div>
+            <span class="badge badge-info" id="review-stats" style="font-size:var(--fs-sm);padding:6px 12px;font-weight:800;"></span>
+          </div>
+
+          <div id="review-container"></div>
+        </div>
+
+        <!-- Not found -->
+        <div id="not-found" class="card" style="display:none;text-align:center;padding:var(--space-3xl);max-width:540px;margin:2rem auto;">
+          <img src="assets/images/3d-icons/clipboard.png" style="width:64px;height:64px;margin-bottom:var(--space-md);" alt="">
+          <h2 style="margin-bottom:var(--space-sm);">Belum Mengerjakan Evaluasi</h2>
+          <p style="color:var(--text-secondary);margin-bottom:var(--space-xl);">
+            Anda belum memiliki riwayat pengerjaan evaluasi akhir. Silakan ambil evaluasi untuk menguji pemahaman materi Anda.
+          </p>
+          <a href="evaluasi.html" class="btn btn-primary btn-lg">
+            <img src="assets/images/3d-icons/rocket.png" class="btn-3d-icon" alt="">
+            Mulai Kerjakan Evaluasi
+          </a>
+        </div>
+
+        <!-- Bottom actions -->
+        <div id="result-actions" class="result-actions" style="display:none;">
+          <a href="beranda.html" class="btn btn-secondary btn-lg">← Kembali ke Beranda</a>
+          <a href="evaluasi.html" class="btn btn-primary btn-lg">
+            <img src="assets/images/3d-icons/rocket.png" class="btn-3d-icon" alt="">
+            Ulangi Evaluasi
+          </a>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import { authReady } from "./assets/js/auth-guard.js";
+    import { db, doc, getDoc } from "./assets/js/firebase-config.js";
+
+    const params = new URLSearchParams(window.location.search);
+    const kuisId = params.get("kuisId") || "kuis-akhir";
+
+    authReady.then(async (userData) => {
+      try {
+        const hasilRef = doc(db, "hasilKuis", `${userData.uid}_${kuisId}`);
+        const hasilSnap = await getDoc(hasilRef);
+
+        document.getElementById("loading-screen").style.display = "none";
+        document.getElementById("app-content").style.display = "block";
+
+        if (!hasilSnap.exists()) {
+          document.getElementById("not-found").style.display = "block";
+          return;
+        }
+
+        const hasil = hasilSnap.data();
+
+        const kuisRef = doc(db, "kuis", kuisId);
+        const kuisSnap = await getDoc(kuisRef);
+
+        if (!kuisSnap.exists() || !kuisSnap.data().soal) {
+          document.getElementById("not-found").style.display = "block";
+          return;
+        }
+
+        const kuisData = kuisSnap.data();
+
+        renderScore(hasil.skor !== undefined ? hasil.skor : hasil.nilai, kuisData.soal.length);
+        renderReview(kuisData.soal, hasil.jawabanSiswa || []);
+
+        document.getElementById("score-section").style.display = "block";
+        document.getElementById("review-section").style.display = "block";
+        document.getElementById("result-actions").style.display = "flex";
+
+      } catch (err) {
+        console.error("[HasilEvaluasi] Error:", err);
+        document.getElementById("loading-screen").style.display = "none";
+        document.getElementById("app-content").style.display = "block";
+        document.getElementById("not-found").style.display = "block";
+      }
+    });
+
+    function renderScore(skor, totalSoal) {
+      const scoreValue   = document.getElementById("score-value");
+      const scoreCircle  = document.getElementById("score-circle");
+      const scoreSummary = document.getElementById("score-summary");
+      const scoreMessage = document.getElementById("score-message");
+
+      const scoreNum = Math.round(skor || 0);
+      scoreValue.textContent = scoreNum;
+
+      let grade, message;
+      if (scoreNum >= 85) {
+        grade = "excellent"; message = "Sangat Memuaskan! Anda menguasai seluruh konsep SQL dengan baik.";
+      } else if (scoreNum >= 75) {
+        grade = "good"; message = "Bagus Sekali! Anda telah melampaui KKM standar kelulusan.";
+      } else if (scoreNum >= 60) {
+        grade = "average"; message = "Cukup Baik. Disarankan untuk meninjau kembali bagian yang belum tepat.";
+      } else {
+        grade = "poor"; message = "Perlu Remedial. Silakan pelajari ulang Kegiatan Belajar 1, 2, dan 3.";
+      }
+
+      scoreCircle.className = `score-circle ${grade}`;
+      scoreMessage.className = `score-message ${grade}`;
+      scoreMessage.innerHTML = `
+        <img src="assets/images/3d-icons/${grade === 'poor' ? 'warning.png' : 'trophy.png'}" class="badge-3d-icon" alt="">
+        <span>${message}</span>
+      `;
+
+      const benar = Math.round((scoreNum / 100) * totalSoal);
+      scoreSummary.textContent = `${benar} dari ${totalSoal} butir soal dijawab dengan benar`;
+    }
+
+    function renderReview(soalArray, jawabanSiswa) {
+      const container = document.getElementById("review-container");
+      const stats     = document.getElementById("review-stats");
+
+      let benar = 0;
+      let html = "";
+
+      soalArray.forEach((soal, idx) => {
+        const jawaban = jawabanSiswa[idx];
+        const isEsai = soal.tipe === "esai";
+
+        if (isEsai) {
+          benar++; // completion count
+          html += `
+            <div class="review-item correct" style="border-left: 4px solid var(--secondary);">
+              <div class="review-item-header" style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:var(--space-sm);">
+                  <div class="review-item-badge" style="background:var(--secondary-subtle); color:var(--secondary-dark);">📝</div>
+                  <span style="font-size:var(--fs-xs);font-weight:800;color:var(--text-secondary);text-transform:uppercase;">SOAL ${idx + 1}</span>
+                </div>
+                <span class="badge badge-info" style="font-size:10px; font-weight:700;">Soal Esai / Uraian</span>
+              </div>
+              <p style="font-weight:700;font-size:var(--fs-base);margin-bottom:var(--space-md);">${escapeHtml(soal.pertanyaan)}</p>
+
+              <div style="background:hsl(220, 20%, 97.5%); border-radius:var(--radius-md); padding:var(--space-md); margin-bottom:var(--space-sm);">
+                <strong style="font-size:var(--fs-xs); color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:4px;">Jawaban Anda:</strong>
+                <p style="margin:0; font-size:var(--fs-sm); color:var(--text-primary); white-space:pre-wrap; line-height:1.6;">${escapeHtml(jawaban || '(Belum Dijawab)')}</p>
+              </div>
+
+              <div style="background:hsla(152, 65%, 40%, 0.08); border-radius:var(--radius-md); padding:var(--space-md); border:1px solid hsla(152, 65%, 40%, 0.2);">
+                <strong style="font-size:var(--fs-xs); color:var(--success); text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+                  <img src="assets/images/3d-icons/check.png" class="badge-3d-icon" alt="">
+                  Kunci Jawaban & Pembahasan Acuan Guru:
+                </strong>
+                <p style="margin:0; font-size:var(--fs-sm); color:var(--text-primary); white-space:pre-wrap; line-height:1.6;">${escapeHtml(soal.kunciJawaban || 'Sesuai instruksi dan rubrik guru.')}</p>
+              </div>
+            </div>
+          `;
+        } else {
+          const isCorrect = jawaban === soal.jawabanBenarIndex;
+          if (isCorrect) benar++;
+
+          html += `
+            <div class="review-item ${isCorrect ? 'correct' : 'wrong'}">
+              <div class="review-item-header" style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:var(--space-sm);">
+                  <div class="review-item-badge">${isCorrect ? '✓' : '✗'}</div>
+                  <span style="font-size:var(--fs-xs);font-weight:800;color:var(--text-secondary);text-transform:uppercase;">SOAL ${idx + 1}</span>
+                </div>
+                <span class="badge badge-primary" style="font-size:10px; font-weight:700;">Pilihan Ganda</span>
+              </div>
+              <p style="font-weight:700;font-size:var(--fs-base);margin-bottom:var(--space-md);">${escapeHtml(soal.pertanyaan)}</p>
+          `;
+
+          const opsiList = soal.opsi || [];
+          if (isCorrect) {
+            html += `
+              <div class="review-answer user-answer-correct">
+                <img src="assets/images/3d-icons/check.png" class="badge-3d-icon" alt="">
+                <span>Jawaban Anda Benar: <strong>${String.fromCharCode(65 + jawaban)}. ${escapeHtml(opsiList[jawaban] || '')}</strong></span>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="review-answer user-answer-wrong">
+                <img src="assets/images/3d-icons/warning.png" class="badge-3d-icon" alt="">
+                <span>Jawaban Anda: <strong>${jawaban >= 0 ? `${String.fromCharCode(65 + jawaban)}. ${escapeHtml(opsiList[jawaban] || '')}` : '(Belum Dijawab)'}</strong></span>
+              </div>
+              <div class="review-answer correct-answer">
+                <img src="assets/images/3d-icons/check.png" class="badge-3d-icon" alt="">
+                <span>Kunci Jawaban Benar: <strong>${String.fromCharCode(65 + (soal.jawabanBenarIndex || 0))}. ${escapeHtml(opsiList[soal.jawabanBenarIndex || 0] || '')}</strong></span>
+              </div>
+            `;
+          }
+
+          html += `</div>`;
+        }
+      });
+
+      container.innerHTML = html;
+      stats.textContent = `${benar} / ${soalArray.length} Soal`;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Guru — E-Modul Interaktif SQL</title>
+  <meta name="description" content="Dashboard Guru untuk mengelola akun siswa, melihat rekap progres, dan hasil kuis penelitian.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.1">
+  <style>
+    :root {
+      --font-family: 'Plus Jakarta Sans', 'Poppins', -apple-system, sans-serif;
+      --bg-body: hsl(220, 20%, 97%);
+      --shadow-sm: 0 4px 20px -4px rgba(16, 24, 40, 0.03);
+      --shadow-md: 0 12px 36px -8px rgba(16, 24, 40, 0.05);
+      --shadow-lg: 0 20px 48px -10px rgba(16, 24, 40, 0.08);
+      --primary-glow: hsla(231, 68%, 52%, 0.12);
+    }
+
+    /* Modern Form Inputs override */
+    .form-input {
+      background: hsl(220, 20%, 95%) !important;
+      border: 1.5px solid transparent !important;
+      border-radius: 10px !important;
+      padding: 12px 16px !important;
+      font-family: var(--font-family) !important;
+      color: var(--text-primary) !important;
+      font-size: var(--fs-sm) !important;
+      transition: all var(--transition-fast) !important;
+      box-shadow: none !important;
+    }
+
+    .form-input:focus {
+      background: #ffffff !important;
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 4px var(--primary-glow) !important;
+    }
+
+    /* Reset scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: hsl(228, 12%, 80%);
+      border-radius: var(--radius-full);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: hsl(228, 12%, 70%);
+    }
+
+    .page-wrapper {
+      min-height: 100vh;
+      background: var(--bg-body);
+    }
+
+    /* Dashboard Grid Layout */
+    .dashboard-layout {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(160deg, #090f20 0%, #111d40 45%, #172554 100%);
+      color: var(--text-on-primary);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+      transition: transform var(--transition-base);
+      box-shadow: 4px 0 28px rgba(11, 19, 41, 0.35);
+      overflow: hidden;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .sidebar::before {
+      content: "";
+      position: absolute;
+      top: -15%;
+      right: -15%;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, hsla(231, 75%, 64%, 0.22) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .sidebar-header, .sidebar-menu, .sidebar-footer {
+      position: relative;
+      z-index: 2;
+    }
+
+    .sidebar-header {
+      padding: var(--space-xl) var(--space-lg);
+      border-bottom: 1px solid hsla(0, 0%, 100%, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .logo-icon {
+      font-size: var(--fs-lg);
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, hsl(231, 75%, 60%), hsl(222, 47%, 45%));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-title {
+      font-weight: 700;
+      font-size: var(--fs-md);
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .logo-subtitle {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #93c5fd;
+    }
+
+    .sidebar-close-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: var(--fs-xl);
+      cursor: pointer;
+    }
+
+    .sidebar-menu {
+      padding: var(--space-lg) var(--space-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md);
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-md);
+      color: hsla(0, 0%, 100%, 0.82);
+      font-family: var(--font-family);
+      font-size: var(--fs-sm);
+      font-weight: 500;
+      text-align: left;
+      cursor: pointer;
+      width: 100%;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .sidebar-link:hover {
+      color: #ffffff;
+      background: hsla(0, 0%, 100%, 0.12);
+    }
+
+    .sidebar-link.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(8px);
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+      border-left: 4px solid #60a5fa;
+    }
+
+    .sidebar-footer {
+      padding: var(--space-lg);
+      border-top: 1px solid hsla(0, 0%, 100%, 0.08);
+    }
+
+    .sidebar-back-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: var(--space-md);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-md);
+      color: #ffffff;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all var(--transition-fast);
+    }
+
+    .sidebar-back-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      margin-left: 280px;
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-body);
+    }
+
+    /* Top Navbar */
+    .navbar-modern {
+      height: 76px;
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-2xl);
+      box-shadow: 0 1px 3px hsla(228, 30%, 14%, 0.04);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .sidebar-toggle-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      font-size: var(--fs-xl);
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    .navbar-page-title {
+      font-weight: 700;
+      font-size: var(--fs-lg);
+      color: var(--text-primary);
+    }
+
+    .navbar-profile {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+    }
+
+    .profile-name {
+      font-weight: 600;
+      font-size: var(--fs-sm);
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .profile-role {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--warning);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .profile-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: var(--text-on-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: var(--fs-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Dashboard Main Container */
+    .dashboard-container {
+      padding: var(--space-2xl);
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    /* Section Cards (Clean and borderless!) */
+    .guru-section {
+      background: var(--bg-card);
+      border: none; /* No side/outer borders! */
+      border-radius: var(--radius-lg);
+      padding: var(--space-2xl);
+      margin-bottom: var(--space-2xl);
+      box-shadow: var(--shadow-md);
+    }
+
+    .guru-section h2 {
+      font-size: var(--fs-lg);
+      margin-bottom: var(--space-lg);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Stats Overview Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: none;
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg) var(--space-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition-base), box-shadow var(--transition-base);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--fs-lg);
+      flex-shrink: 0;
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-number {
+      font-size: var(--fs-xl);
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+    }
+
+    /* Form Container (Clean Inset block) */
+    .add-student-form {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr) auto;
+      gap: var(--space-md);
+      align-items: end;
+      margin-bottom: var(--space-2xl);
+      padding: var(--space-lg);
+      background: var(--bg-body);
+      border-radius: var(--radius-md);
+      border: none;
+    }
+
+    .add-student-form .form-group {
+      margin-bottom: 0;
+    }
+
+    /* Table Wrapper & styling */
+    .guru-table-wrapper {
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      border: none; /* Removed ugly border outline */
+      box-shadow: var(--shadow-sm);
+      background: var(--bg-card);
+    }
+
+    .guru-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--fs-sm);
+    }
+
+    .guru-table th {
+      background: hsl(228, 25%, 95%);
+      color: var(--text-primary);
+      padding: var(--space-md);
+      text-align: left;
+      font-weight: 600;
+      font-size: var(--fs-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .guru-table td {
+      padding: var(--space-md) var(--space-lg);
+      border-bottom: 1px solid hsl(228, 18%, 95%);
+      vertical-align: middle;
+      white-space: nowrap;
+      color: var(--text-primary);
+    }
+
+    .guru-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .guru-table tr:hover td {
+      background: hsla(231, 68%, 52%, 0.02);
+    }
+
+    /* Tab Panels */
+    .tab-panel {
+      display: none;
+      animation: fadeIn var(--transition-base) forwards;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Action buttons */
+    .btn-sm {
+      padding: 6px 14px;
+      font-size: var(--fs-xs);
+      min-height: 34px;
+      border-radius: var(--radius-sm);
+    }
+
+    .btn-danger {
+      background: var(--error);
+      color: white;
+      border: none;
+      font-weight: 600;
+      box-shadow: 0 2px 8px hsla(0, 72%, 56%, 0.15);
+    }
+
+    .btn-danger:hover {
+      background: hsl(0, 72%, 46%);
+      box-shadow: 0 4px 12px hsla(0, 72%, 56%, 0.25);
+    }
+
+    /* Dynamic Question Card */
+    .question-card {
+      background: var(--bg-card);
+      border: none; /* No side/outer borders! */
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      position: relative;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .question-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-md);
+    }
+
+    .question-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: var(--fs-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .question-text {
+      font-weight: 600;
+      font-size: var(--fs-base);
+      margin-top: 4px;
+      line-height: 1.5;
+      color: var(--text-primary);
+    }
+
+    .question-options-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-sm);
+    }
+
+    .question-option {
+      padding: var(--space-md);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: var(--fs-sm);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      color: var(--text-secondary);
+      background: var(--bg-body);
+    }
+
+    .question-option.correct {
+      border-color: var(--success);
+      background: hsla(145, 63%, 42%, 0.05);
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    /* Loading Screen styles */
+    .loading-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: var(--space-md);
+      background: var(--bg-dark);
+      color: #ffffff;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 9999;
+    }
+
+    .loading-spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid hsla(0, 0%, 100%, 0.1);
+      border-top-color: var(--warning);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+      font-size: var(--fs-sm);
+      color: hsla(0, 0%, 100%, 0.7);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* Sidebar overlay on mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 95;
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay.show {
+        display: block;
+      }
+
+      .sidebar-close-btn {
+        display: block;
+      }
+
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .sidebar-toggle-btn {
+        display: block;
+      }
+
+      .navbar-modern {
+        padding: 0 var(--space-xl);
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .add-student-form {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .add-student-form {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+      }
+      .add-student-form button {
+        width: 100%;
+      }
+      .navbar-profile .profile-info {
+        display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .question-options-list {
+        grid-template-columns: 1fr;
+      }
+      .dashboard-container {
+        padding: var(--space-md);
+      }
+    }
+
+    /* Modern Badge Pill & Status dot overrides */
+    .status-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      line-height: 1;
+    }
+    .status-dot.selesai {
+      background: hsla(152, 60%, 42%, 0.1);
+      color: var(--success);
+    }
+    .status-dot.belum {
+      background: hsla(0, 0%, 50%, 0.08);
+      color: var(--text-secondary);
+    }
+    .status-dot.info {
+      background: hsla(205, 80%, 52%, 0.1);
+      color: var(--info);
+    }
+    .status-dot.warning {
+      background: hsla(38, 92%, 55%, 0.1);
+      color: var(--warning);
+    }
+    .status-dot.danger {
+      background: hsla(0, 72%, 56%, 0.1);
+      color: var(--error);
+    }
+
+    .badge-role {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: hsla(231, 68%, 52%, 0.08);
+      color: var(--primary);
+      line-height: 1;
+    }
+    
+    .badge-role.guru {
+      background: hsla(38, 92%, 55%, 0.1);
+      color: var(--warning);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <!-- Loading -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Memuat Dashboard Guru…</p>
+    </div>
+
+    <div id="app-content" class="dashboard-layout" style="display: none;">
+
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-logo">
+            <img src="assets/images/logos/logo-smkn1stg.png?v=5" style="width:36px;height:36px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.3));" alt="Logo SMKN 1 STG">
+            <div class="logo-text">
+              <span class="logo-title">E-Modul SQL</span>
+              <span class="logo-subtitle">Guru Dashboard</span>
+            </div>
+          </div>
+          <button class="sidebar-close-btn" id="sidebar-close-btn">×</button>
+        </div>
+        <div class="sidebar-menu">
+          <button class="sidebar-link active" data-tab="kelola">
+            <span class="menu-icon">👤</span>
+            <span class="menu-text">Kelola Akun Siswa</span>
+          </button>
+          <button class="sidebar-link" data-tab="progres">
+            <span class="menu-icon">📈</span>
+            <span class="menu-text">Rekap Progres Belajar</span>
+          </button>
+          <button class="sidebar-link" data-tab="hasil">
+            <span class="menu-icon">📝</span>
+            <span class="menu-text">Rekap Hasil Kuis</span>
+          </button>
+          <button class="sidebar-link" data-tab="kuis">
+            <span class="menu-icon">⚙️</span>
+            <span class="menu-text">Kelola Soal Kuis</span>
+          </button>
+          <button class="sidebar-link" data-tab="materi">
+            <span class="menu-icon">📖</span>
+            <span class="menu-text">Kelola Materi Modul</span>
+          </button>
+          <button class="sidebar-link" data-tab="latihan_kegiatan">
+            <span class="menu-icon">✏️</span>
+            <span class="menu-text">Kelola Soal Latihan</span>
+          </button>
+          <button class="sidebar-link" data-tab="video">
+            <span class="menu-icon">🎬</span>
+            <span class="menu-text">Kelola Video Materi</span>
+          </button>
+          <button class="sidebar-link" data-tab="latihan_sql">
+            <span class="menu-icon">💻</span>
+            <span class="menu-text">Kelola Latihan SQL</span>
+          </button>
+        </div>
+        <div class="sidebar-footer">
+          <a href="beranda.html" class="sidebar-back-btn">
+            <span>← Kembali ke Beranda</span>
+          </a>
+          <button class="btn btn-ghost btn-sm" id="btn-guru-logout-sidebar" style="color:#ef4444; width:100%; margin-top:8px; justify-content:center; font-weight:700;">
+            🚪 Keluar (Logout)
+          </button>
+        </div>
+      </aside>
+
+      <!-- Sidebar Overlay for Mobile -->
+      <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+      <!-- Main Content Area -->
+      <div class="main-content">
+        <!-- Navbar -->
+        <header class="navbar-modern">
+          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn">☰</button>
+          <div class="navbar-page-title" id="navbar-page-title">Kelola Akun Siswa</div>
+          <div class="navbar-profile" style="display:flex; align-items:center;">
+            <div class="profile-info">
+              <span class="profile-name">Guru Basis Data</span>
+              <span class="profile-role">Administrator</span>
+            </div>
+            <div class="profile-avatar">G</div>
+            <button class="btn btn-ghost btn-sm" id="btn-guru-logout" style="color:#ef4444; font-weight:700; border:1px solid hsla(0,80%,60%,0.2); padding:6px 12px; margin-left:12px;" title="Keluar dari akun guru">
+              🚪 Keluar
+            </button>
+          </div>
+        </header>
+
+        <!-- Page Container -->
+        <main class="dashboard-container">
+
+          <!-- Overview stats -->
+          <div class="stats-grid">
+            <!-- Card 1: Total Siswa -->
+            <div class="stat-card">
+              <div class="stat-icon" style="background: hsla(205, 80%, 52%, 0.1); color: var(--info);">👤</div>
+              <div class="stat-info">
+                <div class="stat-number" id="stat-total-siswa">0</div>
+                <div class="stat-label">Total Akun Siswa</div>
+              </div>
+            </div>
+            <!-- Card 2: Selesai Kegiatan 1 -->
+            <div class="stat-card">
+              <div class="stat-icon" style="background: hsla(152, 60%, 42%, 0.1); color: var(--success);">📈</div>
+              <div class="stat-info">
+                <div class="stat-number" id="stat-selesai-keg1">0</div>
+                <div class="stat-label">Selesai Kegiatan 1</div>
+              </div>
+            </div>
+            <!-- Card 3: Sudah Evaluasi Kuis -->
+            <div class="stat-card">
+              <div class="stat-icon" style="background: hsla(256, 85%, 62%, 0.1); color: var(--primary);">📝</div>
+              <div class="stat-info">
+                <div class="stat-number" id="stat-selesai-kuis">0</div>
+                <div class="stat-label">Sudah Evaluasi Kuis</div>
+              </div>
+            </div>
+            <!-- Card 4: Rata-rata Skor -->
+            <div class="stat-card">
+              <div class="stat-icon" style="background: hsla(38, 92%, 55%, 0.1); color: var(--warning);">⭐</div>
+              <div class="stat-info">
+                <div class="stat-number" id="stat-rata-skor">0</div>
+                <div class="stat-label">Rata-rata Skor Kuis</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 1: Kelola Akun Siswa -->
+          <section class="tab-panel active" id="panel-kelola">
+            <div class="guru-section">
+              <h2>➕ Tambah Akun Siswa Baru</h2>
+              
+              <form id="form-add-student" class="add-student-form">
+                <div class="form-group">
+                  <label class="form-label" for="new-nama">Nama Lengkap Siswa</label>
+                  <input class="form-input" type="text" id="new-nama" placeholder="Contoh: Budi Santoso" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="new-email">Email Login</label>
+                  <input class="form-input" type="email" id="new-email" placeholder="budi@smkn1.sch.id" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="new-kelas">Kelas</label>
+                  <select class="form-input" id="new-kelas" required>
+                    <option value="XI RPL 1">XI RPL 1</option>
+                    <option value="XI RPL 2">XI RPL 2</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="new-password">Password Initial</label>
+                  <input class="form-input" type="text" id="new-password" value="smk123456" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="btn-add-student" style="height:48px;">
+                  + Buat Akun Siswa
+                </button>
+              </form>
+
+              <div class="error-message" id="add-student-error" style="margin-bottom: var(--space-md);"></div>
+
+              <h2>📋 Daftar Akun Siswa Terdaftar</h2>
+              <div class="guru-table-wrapper">
+                <table class="guru-table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Nama Siswa</th>
+                      <th>Email</th>
+                      <th>Kelas</th>
+                      <th>Role</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-siswa-body">
+                    <tr>
+                      <td colspan="6" style="text-align:center;padding:var(--space-xl);color:var(--text-secondary);">
+                        Memuat daftar siswa…
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Tab 2: Rekap Progres Belajar -->
+          <section class="tab-panel" id="panel-progres">
+            <div class="guru-section">
+              <h2>📈 Rekap Progres Kegiatan Belajar Siswa</h2>
+              <p style="color:var(--text-secondary);font-size:var(--fs-sm);margin-bottom:var(--space-lg);">
+                Status penyelesaian Kegiatan 1, Kegiatan 2, dan Kegiatan 3 untuk setiap siswa.
+              </p>
+              <div class="guru-table-wrapper">
+                <table class="guru-table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Nama Siswa</th>
+                      <th>Kelas</th>
+                      <th>Kegiatan 1</th>
+                      <th>Kegiatan 2</th>
+                      <th>Kegiatan 3</th>
+                      <th>Total Progres</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-progres-body">
+                    <tr>
+                      <td colspan="7" style="text-align:center;padding:var(--space-xl);color:var(--text-secondary);">
+                        Memuat data progres…
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Tab 3: Rekap Hasil Kuis -->
+          <section class="tab-panel" id="panel-hasil">
+            <div class="guru-section">
+              <!-- Header & Action Buttons -->
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-md); margin-bottom:var(--space-lg);">
+                <div>
+                  <h2 style="margin:0 0 4px 0; display:flex; align-items:center; gap:8px;">
+                    <span>📝</span> Rekap Nilai Evaluasi (Kuis Akhir)
+                  </h2>
+                  <p style="color:var(--text-secondary);font-size:var(--fs-sm);margin:0;">
+                    Hasil nilai evaluasi kuis siswa yang dapat dicetak atau diunduh ke PDF resmi dengan kop surat sekolah.
+                  </p>
+                </div>
+                <div style="display:flex; gap:var(--space-sm); flex-wrap:wrap;">
+                  <button type="button" class="btn btn-primary" id="btn-export-pdf" style="font-weight:800; display:flex; align-items:center; gap:8px; box-shadow:0 4px 14px var(--primary-glow);">
+                    <img src="assets/images/3d-icons/clipboard.png" style="width:20px;height:20px;object-fit:contain;" alt="">
+                    📄 Unduh Laporan PDF (Kop Resmi)
+                  </button>
+                  <button type="button" class="btn btn-secondary" id="btn-refresh-hasil" style="font-weight:700;">
+                    🔄 Segarkan
+                  </button>
+                </div>
+              </div>
+
+              <!-- Filter Bar & Summary Box -->
+              <div style="background:hsl(220, 20%, 97.5%); border-radius:var(--radius-lg); padding:var(--space-md) var(--space-lg); margin-bottom:var(--space-lg); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-md); border:1px solid var(--border-light);">
+                <div style="display:flex; align-items:center; gap:var(--space-sm); flex-wrap:wrap;">
+                  <span style="font-size:var(--fs-xs); font-weight:800; color:var(--text-secondary); text-transform:uppercase;">Filter Kelas:</span>
+                  <button type="button" class="btn btn-primary btn-sm btn-filter-kelas-hasil" data-kelas="all">Semua Kelas</button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-filter-kelas-hasil" data-kelas="XI RPL 1">XI RPL 1</button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-filter-kelas-hasil" data-kelas="XI RPL 2">XI RPL 2</button>
+                </div>
+                <div id="hasil-summary-chips" style="display:flex; gap:var(--space-md); font-size:var(--fs-xs); font-weight:700;">
+                  <span style="color:var(--primary);">Total: <strong id="chip-total-siswa">0</strong> Siswa</span>
+                  <span style="color:var(--success);">Tuntas: <strong id="chip-tuntas-siswa">0</strong></span>
+                  <span style="color:var(--error);">Belum Tuntas: <strong id="chip-belum-tuntas">0</strong></span>
+                  <span style="color:hsl(38,92%,40%);">Rata-rata: <strong id="chip-rata-skor">0</strong></span>
+                </div>
+              </div>
+
+              <div class="guru-table-wrapper">
+                <table class="guru-table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Nama Siswa</th>
+                      <th>Kelas</th>
+                      <th>Skor Kuis</th>
+                      <th>Tingkat Pemahaman</th>
+                      <th>Waktu Selesai</th>
+                      <th>Rincian Jawaban</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-hasil-body">
+                    <tr>
+                      <td colspan="7" style="text-align:center;padding:var(--space-xl);color:var(--text-secondary);">
+                        Memuat data hasil kuis…
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Tab 4: Kelola Kuis -->
+          <section class="tab-panel" id="panel-kuis">
+            <div class="guru-section" style="border:none; box-shadow: 0 4px 24px -2px rgba(0,0,0,0.05); padding:var(--space-2xl);">
+              
+              <!-- Header Section -->
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:var(--space-md); margin-bottom:var(--space-xl);">
+                <div>
+                  <h2 style="display:flex; align-items:center; gap:10px; font-size:var(--fs-xl); font-weight:800; margin:0 0 6px 0;">
+                    <img src="assets/images/3d-icons/trophy.png" style="width:34px;height:34px;object-fit:contain;" alt="">
+                    Kelola Kuis Evaluasi Akhir
+                  </h2>
+                  <p style="color:var(--text-secondary);font-size:var(--fs-sm);margin:0;">
+                    Buat pertanyaan, tentukan kunci jawaban, serta aktifkan atau tutup lembar ujian kuis untuk siswa.
+                  </p>
+                </div>
+
+                <div style="display:flex; gap:var(--space-sm); flex-wrap:wrap;">
+                  <a href="evaluasi.html" target="_blank" class="btn btn-secondary" style="font-weight:700;">
+                    👁️ Buka Preview Siswa
+                  </a>
+                </div>
+              </div>
+
+              <!-- Status & Summary Indicator Bar -->
+              <div style="background:hsl(220, 20%, 97.5%); border-radius:var(--radius-xl); padding:var(--space-xl); margin-bottom:var(--space-2xl); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-lg);">
+                <div style="display:flex; align-items:center; gap:var(--space-xl); flex-wrap:wrap;">
+                  
+                  <!-- Status Indicator -->
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <span id="kuis-status-dot" style="width:14px; height:14px; border-radius:50%; background:var(--warning); display:inline-block;"></span>
+                    <div>
+                      <div style="font-size:11px; font-weight:800; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Status Akses Ujian</div>
+                      <div id="kuis-status-text" style="font-size:var(--fs-base); font-weight:800; color:var(--text-primary);">Memuat status...</div>
+                    </div>
+                  </div>
+
+                  <!-- Chips Summary -->
+                  <div style="display:flex; gap:var(--space-xl); border-left:1.5px solid var(--border); padding-left:var(--space-xl);" class="hide-mobile">
+                    <div>
+                      <div style="font-size:11px; font-weight:800; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Jumlah Soal</div>
+                      <div id="summary-total-soal" style="font-size:var(--fs-lg); font-weight:800; color:var(--primary);">0 Soal</div>
+                    </div>
+                    <div>
+                      <div style="font-size:11px; font-weight:800; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Bobot Per Soal</div>
+                      <div id="summary-bobot-soal" style="font-size:var(--fs-lg); font-weight:800; color:var(--secondary);">10 Poin</div>
+                    </div>
+                    <div>
+                      <div style="font-size:11px; font-weight:800; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Standar KKM</div>
+                      <div style="font-size:var(--fs-lg); font-weight:800; color:hsl(35,90%,38%);">75 Poin</div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Toggle status button -->
+                <div style="display:flex; gap:var(--space-sm);">
+                  <button type="button" class="btn btn-secondary" id="btn-toggle-status" style="font-weight:700; background:#ffffff;">
+                    🔄 Ubah Status Ujian
+                  </button>
+                </div>
+              </div>
+
+              <!-- Slot Builder Control Box (Manual Input dengan Multi-Slot Generator) -->
+              <div style="background:#ffffff; border-radius:var(--radius-xl); padding:var(--space-xl); margin-bottom:var(--space-xl); box-shadow:0 4px 20px -2px rgba(0,0,0,0.04); border:1px solid var(--border-light);">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:var(--space-md);">
+                  <span style="font-size:1.4rem;">📋</span>
+                  <div>
+                    <h3 style="font-size:var(--fs-base); font-weight:800; margin:0; color:var(--text-primary);">Tentukan Jumlah Slot Soal yang Ingin Dibuat</h3>
+                    <p style="font-size:var(--fs-xs); color:var(--text-secondary); margin:2px 0 0 0;">Tentukan berapa butir slot formulir kosong (Pilihan Ganda & Esai) yang ingin Anda buat, lalu isi pertanyaan dan pilihannya secara manual.</p>
+                  </div>
+                </div>
+
+                <div style="display:flex; gap:var(--space-lg); align-items:flex-end; flex-wrap:wrap;">
+                  <div class="form-group" style="margin-bottom:0; min-width:180px; flex:1;">
+                    <label class="form-label" for="input-count-pg" style="font-size:var(--fs-xs); font-weight:700; color:var(--primary);">
+                      🔘 Jumlah Slot Pilihan Ganda
+                    </label>
+                    <input class="form-input" type="number" id="input-count-pg" min="0" max="40" value="0" placeholder="Contoh: 5" required style="font-weight:700; font-size:var(--fs-base); background:hsl(220, 20%, 98%);">
+                  </div>
+
+                  <div class="form-group" style="margin-bottom:0; min-width:180px; flex:1;">
+                    <label class="form-label" for="input-count-esai" style="font-size:var(--fs-xs); font-weight:700; color:var(--secondary-dark);">
+                      📝 Jumlah Slot Esai / Uraian
+                    </label>
+                    <input class="form-input" type="number" id="input-count-esai" min="0" max="20" value="0" placeholder="Contoh: 1" required style="font-weight:700; font-size:var(--fs-base); background:hsl(220, 20%, 98%);">
+                  </div>
+
+                  <button type="button" class="btn btn-primary" id="btn-apply-composition" style="min-height:46px; font-weight:800; white-space:nowrap; padding:0 var(--space-xl);">
+                    📋 Buat Slot Lembar Soal
+                  </button>
+                </div>
+              </div>
+
+              <!-- Question Form List -->
+              <form id="form-manage-kuis">
+                <div id="generated-questions-container" style="display: flex; flex-direction: column; gap: var(--space-xl); margin-bottom: var(--space-xl);">
+                  <!-- Dynamic Question Cards or Empty Placeholder Rendered by JS -->
+                </div>
+
+                <div id="quiz-editor-actions" style="display:none;">
+                  <!-- Add Question Buttons (PG & Essay) -->
+                  <div style="display:flex; justify-content:center; gap:var(--space-md); margin-bottom:var(--space-2xl); flex-wrap:wrap;">
+                    <button type="button" class="btn btn-secondary btn-lg" id="btn-add-pg" style="border:2px dashed var(--primary-light); background:hsl(220, 20%, 98%); color:var(--primary); font-weight:800; display:flex; align-items:center; gap:8px;">
+                      <span style="font-size:1.2rem;">🔘</span> + Tambah Soal Pilihan Ganda
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-lg" id="btn-add-esai" style="border:2px dashed var(--secondary); background:hsl(220, 20%, 98%); color:var(--secondary-dark); font-weight:800; display:flex; align-items:center; gap:8px;">
+                      <span style="font-size:1.2rem;">📝</span> + Tambah Soal Esai / Uraian
+                    </button>
+                  </div>
+
+                  <div class="error-message" id="manage-kuis-error" style="margin-bottom: var(--space-md);"></div>
+
+                  <!-- Sticky Bottom Actions -->
+                  <div style="background:#ffffff; border-radius:var(--radius-xl); padding:var(--space-xl); box-shadow:0 6px 28px -4px rgba(0,0,0,0.08); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-md); border:1px solid var(--border-light);">
+                    <div>
+                      <strong style="color:var(--text-primary); font-size:var(--fs-base); display:block;">Simpan & Terapkan Perubahan</strong>
+                      <span style="color:var(--text-secondary); font-size:var(--fs-xs);">Pastikan pertanyaan, opsi A-B-C-D, dan kunci jawaban telah dipilih dengan benar.</span>
+                    </div>
+                    <div style="display:flex; gap:var(--space-md); flex-wrap:wrap;">
+                      <button type="button" class="btn btn-secondary" id="btn-draft-kuis" style="min-height:46px; font-weight:700;">
+                        💾 Simpan Sebagai Draft
+                      </button>
+                      <button type="submit" class="btn btn-primary btn-lg" id="btn-publish-kuis" style="min-height:46px; font-weight:800;">
+                        <img src="assets/images/3d-icons/check.png" style="width:20px;height:20px;object-fit:contain;margin-right:6px;" alt="">
+                        Simpan & Aktifkan Ujian (Publish)
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </section>
+
+          <!-- Tab: Kelola Materi Modul -->
+          <section class="tab-panel" id="panel-materi">
+            <div class="card" style="padding:var(--space-2xl); border-radius:var(--radius-xl); border:none; box-shadow:0 4px 24px -2px rgba(0,0,0,0.05); margin-bottom:var(--space-xl);">
+              
+              <!-- Header -->
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-md); margin-bottom:var(--space-xl);">
+                <div style="display:flex; align-items:center; gap:var(--space-md);">
+                  <img src="assets/images/3d-icons/book.png" style="width:48px; height:48px; object-fit:contain;" alt="">
+                  <div>
+                    <h2 style="font-size:var(--fs-xl); font-weight:800; color:var(--text-primary); margin:0;">Kelola Materi Pembelajaran</h2>
+                    <p style="color:var(--text-secondary); font-size:var(--fs-sm); margin:2px 0 0 0;">Tambah, edit konten HTML, ubah judul, dan susun urutan sub-materi untuk Kegiatan 1, 2, dan 3.</p>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="btn-open-add-materi" style="font-weight:800;">
+                  ➕ Tambah Sub-Materi Baru
+                </button>
+              </div>
+
+              <!-- Filter Kegiatan -->
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:var(--space-md); margin-bottom:var(--space-lg); border-bottom:1px solid var(--border-light); padding-bottom:var(--space-md);">
+                <div style="display:flex; gap:var(--space-xs); flex-wrap:wrap;" id="materi-filter-group">
+                  <button type="button" class="btn btn-primary btn-sm btn-filter-materi" data-kegiatan="all">Semua Kegiatan</button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-filter-materi" data-kegiatan="1">Kegiatan 1 (DDL)</button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-filter-materi" data-kegiatan="2">Kegiatan 2 (DML)</button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-filter-materi" data-kegiatan="3">Kegiatan 3 (DCL)</button>
+                </div>
+                <span id="materi-count-info" style="font-size:var(--fs-xs); font-weight:700; color:var(--text-secondary);">Memuat data materi...</span>
+              </div>
+
+              <!-- Materi List Grid -->
+              <div id="materi-grid-container" style="display:flex; flex-direction:column; gap:var(--space-lg);">
+                <!-- Dynamic Materi Cards Rendered by JS -->
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Tab Baru: Kelola Soal Latihan Kegiatan Belajar (KKM >= 80) -->
+          <section class="tab-panel" id="panel-latihan_kegiatan">
+            <div class="card" style="padding:var(--space-2xl); border-radius:var(--radius-xl); border:none; box-shadow:0 4px 24px -2px rgba(0,0,0,0.05); margin-bottom:var(--space-xl);">
+              
+              <!-- Header -->
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-md); margin-bottom:var(--space-xl);">
+                <div style="display:flex; align-items:center; gap:var(--space-md);">
+                  <img src="assets/images/3d-icons/pencil.png" style="width:48px; height:48px; object-fit:contain;" alt="">
+                  <div>
+                    <h2 style="font-size:var(--fs-xl); font-weight:800; color:var(--text-primary); margin:0;">Kelola Soal Latihan Kegiatan Belajar</h2>
+                    <p style="color:var(--text-secondary); font-size:var(--fs-sm); margin:2px 0 0 0;">Tambah, edit, dan atur butir soal latihan pilihan ganda (KKM ≥ 80) untuk Kegiatan 1, 2, dan 3.</p>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="btn-tambah-soal-latihan" style="font-weight:800;">
+                  ➕ Tambah Butir Soal Baru
+                </button>
+              </div>
+
+              <!-- Selector Filter Kegiatan & Sub-Materi -->
+              <div style="background:hsl(220, 25%, 97%); padding:var(--space-lg); border-radius:var(--radius-lg); border:1.5px solid var(--border-light); margin-bottom:var(--space-xl);">
+                <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:var(--space-md); align-items:center;">
+                  <div>
+                    <label class="form-label" style="margin-bottom:4px; font-weight:800;" for="filter-latihan-kegiatan">Pilih Kegiatan Belajar:</label>
+                    <select class="form-input" id="filter-latihan-kegiatan" style="font-weight:700; background:#fff;">
+                      <option value="1">Kegiatan Belajar 1 (Pengenalan SQL & DDL)</option>
+                      <option value="2">Kegiatan Belajar 2 (Data Manipulation / DML)</option>
+                      <option value="3">Kegiatan Belajar 3 (Data Control & Keamanan / DCL)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="form-label" style="margin-bottom:4px; font-weight:800;" for="filter-latihan-materi">Pilih Sub-Materi Terkait:</label>
+                    <select class="form-input" id="filter-latihan-materi" style="font-weight:700; background:#fff;">
+                      <!-- Populated dynamically -->
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Info Status Bank Soal -->
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-md); padding-bottom:6px; border-bottom:1px solid var(--border-light);">
+                <span id="latihan-bank-info" style="font-size:var(--fs-sm); font-weight:700; color:var(--text-primary);">Daftar Butir Soal Latihan Aktif</span>
+                <span id="latihan-total-count" style="font-size:var(--fs-xs); font-weight:700; color:var(--text-secondary);">Memuat...</span>
+              </div>
+
+              <!-- Container List Soal -->
+              <div id="container-soal-latihan-list" style="display:flex; flex-direction:column; gap:var(--space-md);">
+                <!-- Dynamic question cards rendered by JS -->
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Tab 5: Kelola Video Materi -->
+          <section class="tab-panel" id="panel-video">
+            <div class="card" style="padding:var(--space-2xl); border-radius:var(--radius-xl); border:none; box-shadow:0 4px 24px -2px rgba(0,0,0,0.05); margin-bottom:var(--space-xl);">
+              
+              <!-- Header -->
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-md); margin-bottom:var(--space-xl);">
+                <div style="display:flex; align-items:center; gap:var(--space-md);">
+                  <img src="assets/images/3d-icons/video.png" style="width:48px; height:48px; object-fit:contain;" alt="">
+                  <div>
+                    <h2 style="font-size:var(--fs-xl); font-weight:800; color:var(--text-primary); margin:0;">Kelola Video Pembelajaran</h2>
+                    <p style="color:var(--text-secondary); font-size:var(--fs-sm); margin:2px 0 0 0;">Tambah, perbarui, atau ganti link video tutorial materi untuk Kegiatan 1, 2, dan 3.</p>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="btn-open-add-video" style="font-weight:800;">
+                  ➕ Tambah Video Baru
+                </button>
+              </div>
+
+              <!-- Info Free YouTube Streaming Card -->
+              <div class="note-box alert-info" style="margin-bottom:var(--space-xl); display:flex; align-items:center; gap:var(--space-md);">
+                <img src="assets/images/3d-icons/bulb.png" class="btn-3d-icon" alt="">
+                <div>
+                  <strong>Tips Hemat & 100% Gratis:</strong> Gunakan link video YouTube (Publik atau <em>Unlisted</em>). File video streaming 100% gratis ditanggung server YouTube tanpa membebani kuota penyimpanan database Firebase!
+                </div>
+              </div>
+
+              <!-- Filter Kegiatan -->
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:var(--space-md); margin-bottom:var(--space-lg); border-bottom:1px solid var(--border-light); padding-bottom:var(--space-md);">
+                <div style="display:flex; gap:var(--space-xs); flex-wrap:wrap;" id="video-filter-group">
+                  <button type="button" class="btn btn-primary btn-sm btn-filter-video" data-kegiatan="all">Semua Kegiatan</button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-filter-video" data-kegiatan="1">Kegiatan 1 (DDL)</button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-filter-video" data-kegiatan="2">Kegiatan 2 (DML)</button>
+                  <button type="button" class="btn btn-secondary btn-sm btn-filter-video" data-kegiatan="3">Kegiatan 3 (DCL)</button>
+                </div>
+                <span id="video-count-info" style="font-size:var(--fs-xs); font-weight:700; color:var(--text-secondary);">Memuat data video...</span>
+              </div>
+
+              <!-- Video List Grid -->
+              <div id="video-grid-container" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:var(--space-xl);">
+                <!-- Dynamic Video Cards Rendered by JS -->
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ======== TAB: Kelola Latihan SQL ======== -->
+          <section class="tab-panel" id="panel-latihan_sql">
+            <div class="section-card">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-md);margin-bottom:var(--space-xl);">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <img src="assets/images/3d-icons/laptop.png" style="width:36px;height:36px;object-fit:contain;" alt="">
+                  <div>
+                    <h2 style="margin:0;font-size:var(--fs-xl);font-weight:900;color:var(--text-primary);">Kelola Latihan SQL</h2>
+                    <p style="margin:0;font-size:var(--fs-xs);color:var(--text-secondary);">Buat soal latihan SQL yang tampil di halaman Editor SQL siswa</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Current active latihan -->
+              <div class="card" style="background:hsl(152,50%,96%);border:1.5px solid hsl(152,40%,85%);padding:var(--space-lg);border-radius:var(--radius-lg);margin-bottom:var(--space-xl);">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:var(--space-sm);">
+                  <span style="font-size:18px;">📋</span>
+                  <strong style="font-size:var(--fs-sm);color:hsl(152,60%,30%);">Latihan SQL yang Sedang Aktif</strong>
+                </div>
+                <div id="active-latihan-info" style="font-size:var(--fs-sm);color:var(--text-secondary);">
+                  <em>Memuat...</em>
+                </div>
+              </div>
+
+              <!-- Form -->
+              <div class="card" style="padding:var(--space-xl);border-radius:var(--radius-lg);">
+                <h3 style="margin:0 0 var(--space-lg) 0;font-size:var(--fs-md);font-weight:800;color:var(--text-primary);">
+                  ✏️ Buat / Edit Latihan SQL
+                </h3>
+
+                <form id="form-latihan-sql">
+                  <div class="form-group">
+                    <label class="form-label" for="latihan-judul">Judul Latihan <span style="color:var(--error);">*</span></label>
+                    <input type="text" class="form-input" id="latihan-judul" required placeholder="Contoh: Latihan SQL — Pertemuan 5: Database Perpustakaan">
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);">
+                    <div class="form-group">
+                      <label class="form-label" for="latihan-pertemuan">Label Pertemuan</label>
+                      <input type="text" class="form-input" id="latihan-pertemuan" placeholder="Contoh: Pertemuan 5">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="latihan-petunjuk">Petunjuk Singkat</label>
+                      <input type="text" class="form-input" id="latihan-petunjuk" placeholder="Contoh: Ketik dan jalankan setiap perintah satu per satu">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="latihan-konten">Isi Perintah SQL (Kode Latihan) <span style="color:var(--error);">*</span></label>
+                    <textarea class="form-input" id="latihan-konten" required rows="18" placeholder="-- Ketik perintah SQL latihan di sini...
+-- Contoh:
+
+CREATE DATABASE db_perpustakaan;
+USE db_perpustakaan;
+
+CREATE TABLE anggota (
+    id_anggota VARCHAR(10) PRIMARY KEY,
+    nama_lengkap VARCHAR(100) NOT NULL,
+    jenis_kelamin ENUM('L', 'P')
+);" style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;tab-size:4;resize:vertical;min-height:280px;"></textarea>
+                  </div>
+
+                  <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;">
+                    <button type="submit" class="btn btn-primary btn-lg" id="btn-simpan-latihan">
+                      <img src="assets/images/3d-icons/rocket.png" style="width:18px;height:18px;object-fit:contain;margin-right:6px;" alt="">
+                      Simpan & Aktifkan Latihan
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="btn-nonaktifkan-latihan" style="display:none;">
+                      🚫 Nonaktifkan Latihan
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+            </div>
+          </section>
+
+        </main> <!-- End Dashboard Container -->
+      </div> <!-- End Main Content Area -->
+    </div> <!-- End App Content / Dashboard Layout -->
+  </div>
+
+  <!-- Modal Tambah / Edit Materi -->
+  <div id="modal-materi" class="sidebar-overlay" style="display:none; align-items:center; justify-content:center; padding:var(--space-md); z-index:999;">
+    <div class="card" style="max-width:860px; width:100%; max-height:92vh; overflow-y:auto; padding:var(--space-2xl); background:#ffffff; border-radius:var(--radius-xl); box-shadow:0 12px 40px rgba(0,0,0,0.25);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-lg); border-bottom:1px solid var(--border-light); padding-bottom:var(--space-md);">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <img src="assets/images/3d-icons/book.png" style="width:28px; height:28px; object-fit:contain;" alt="">
+          <h3 id="modal-materi-title" style="margin:0; font-size:var(--fs-lg); font-weight:800; color:var(--text-primary);">Tambah Sub-Materi Pembelajaran</h3>
+        </div>
+        <button type="button" class="btn btn-ghost" id="btn-close-modal-materi" style="font-size:var(--fs-lg); font-weight:800; padding:4px 10px;">✕</button>
+      </div>
+
+      <form id="form-materi">
+        <input type="hidden" id="materi-doc-id" value="">
+
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:var(--space-md); margin-bottom:var(--space-md);">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" for="materi-select-kegiatan">Kegiatan Belajar <span style="color:var(--error);">*</span></label>
+            <select class="form-input" id="materi-select-kegiatan" required style="font-weight:700;">
+              <option value="1">Kegiatan 1: Pengenalan SQL & DDL</option>
+              <option value="2">Kegiatan 2: Data Manipulation (DML)</option>
+              <option value="3">Kegiatan 3: Data Control & Keamanan (DCL)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" for="materi-input-urutan">Nomor Urut Sub-Materi <span style="color:var(--error);">*</span></label>
+            <input type="number" class="form-input" id="materi-input-urutan" min="1" max="50" value="1" required style="font-weight:700;">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="materi-input-judul">Judul Sub-Materi <span style="color:var(--error);">*</span></label>
+          <input type="text" class="form-input" id="materi-input-judul" required placeholder="Contoh: Modifikasi Struktur Tabel dengan ALTER TABLE" style="font-weight:700;">
+        </div>
+
+        <!-- Quick Formatting Helper Buttons -->
+        <div style="margin-bottom:var(--space-sm);">
+          <label class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>Konten Teks / HTML Materi <span style="color:var(--error);">*</span></span>
+            <span style="font-size:11px; font-weight:600; color:var(--text-secondary);">Mendukung format HTML standar & kode SQL</span>
+          </label>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; padding:6px 10px; background:hsl(220, 20%, 96%); border-radius:var(--radius-md); border:1px solid var(--border-light);">
+            <span style="font-size:11px; font-weight:800; color:var(--text-secondary); align-self:center; margin-right:4px;">Sisipkan Template:</span>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-insert-h3" style="padding:2px 8px; font-size:11px;">Sub-Judul (H3)</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-insert-p" style="padding:2px 8px; font-size:11px;">Paragraf</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-insert-code" style="padding:2px 8px; font-size:11px; font-weight:700; color:var(--primary);">Blok Kode SQL</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-insert-alert" style="padding:2px 8px; font-size:11px;">Kotak Catatan (Alert)</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-insert-list" style="padding:2px 8px; font-size:11px;">List Poin</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-insert-table" style="padding:2px 8px; font-size:11px;">Tabel Data</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <textarea class="form-input" id="materi-input-konten" rows="12" required placeholder="Tulis atau paste konten HTML materi pembelajaran di sini..." style="font-family:'JetBrains Mono', 'Consolas', monospace; font-size:13px; line-height:1.6; tab-size:2; resize:vertical; min-height:200px;"></textarea>
+        </div>
+
+        <!-- Live Preview Box -->
+        <div style="margin-bottom:var(--space-xl); border:1.5px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; background:#ffffff;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 16px; background:hsl(220, 20%, 96%); border-bottom:1px solid var(--border-light);">
+            <strong style="font-size:var(--fs-xs); color:var(--text-primary); display:flex; align-items:center; gap:6px;">
+              <span>👁️</span> Real-time Live Preview (Tampilan Siswa)
+            </strong>
+            <span style="font-size:11px; color:var(--text-secondary);">Otomatis ter-update saat mengetik</span>
+          </div>
+          <div id="materi-live-preview-box" style="padding:var(--space-lg); max-height:240px; overflow-y:auto; font-size:var(--fs-sm); line-height:1.7;">
+            <em style="color:var(--text-secondary);">Preview materi akan tampil di sini saat Anda mengetik konten di atas...</em>
+          </div>
+        </div>
+
+        <div class="error-message" id="materi-form-error" style="margin-bottom:var(--space-md); display:none;"></div>
+
+        <div style="display:flex; justify-content:flex-end; gap:var(--space-md);">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-modal-materi">Batal</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-materi" style="font-weight:800; min-width:140px;">
+            💾 Simpan Materi
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Tambah / Edit Soal Latihan Kegiatan -->
+  <div id="modal-soal-latihan" class="sidebar-overlay" style="display:none; align-items:center; justify-content:center; padding:var(--space-md); z-index:999;">
+    <div class="card" style="max-width:760px; width:100%; max-height:92vh; overflow-y:auto; padding:var(--space-2xl); background:#ffffff; border-radius:var(--radius-xl); box-shadow:0 12px 40px rgba(0,0,0,0.25);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-lg); border-bottom:1px solid var(--border-light); padding-bottom:var(--space-md);">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <img src="assets/images/3d-icons/pencil.png" style="width:28px; height:28px; object-fit:contain;" alt="">
+          <h3 id="modal-soal-latihan-title" style="margin:0; font-size:var(--fs-lg); font-weight:800; color:var(--text-primary);">Tambah Soal Latihan</h3>
+        </div>
+        <button type="button" class="btn btn-ghost" id="btn-close-modal-soal-latihan" style="font-size:var(--fs-lg); font-weight:800; padding:4px 10px;">✕</button>
+      </div>
+
+      <form id="form-soal-latihan">
+        <input type="hidden" id="soal-latihan-materi-id" value="">
+        <input type="hidden" id="soal-latihan-index" value="-1">
+
+        <div class="form-group">
+          <label class="form-label" for="soal-latihan-pertanyaan">Teks Pertanyaan <span style="color:var(--error);">*</span></label>
+          <textarea class="form-input" id="soal-latihan-pertanyaan" rows="3" required placeholder="Tuliskan butir pertanyaan latihan di sini..." style="font-size:var(--fs-sm); line-height:1.5;"></textarea>
+        </div>
+
+        <div style="margin-bottom:var(--space-lg);">
+          <label class="form-label" style="margin-bottom:8px;">Pilihan Jawaban & Tentukan Kunci Jawaban Benar <span style="color:var(--error);">*</span></label>
+          
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <!-- Opsi A -->
+            <div style="display:flex; align-items:center; gap:10px; background:hsl(220,20%,97%); padding:8px 12px; border-radius:var(--radius-md); border:1px solid var(--border-light);">
+              <label style="display:flex; align-items:center; gap:6px; cursor:pointer; min-width:80px; font-weight:800; color:var(--primary);">
+                <input type="radio" name="soal-latihan-kunci" value="0" required style="accent-color:var(--secondary); width:18px; height:18px;">
+                <span>Opsi A</span>
+              </label>
+              <input type="text" class="form-input" id="soal-latihan-opsi-0" required placeholder="Isi teks pilihan A..." style="margin-bottom:0; flex:1;">
+            </div>
+
+            <!-- Opsi B -->
+            <div style="display:flex; align-items:center; gap:10px; background:hsl(220,20%,97%); padding:8px 12px; border-radius:var(--radius-md); border:1px solid var(--border-light);">
+              <label style="display:flex; align-items:center; gap:6px; cursor:pointer; min-width:80px; font-weight:800; color:var(--primary);">
+                <input type="radio" name="soal-latihan-kunci" value="1" required style="accent-color:var(--secondary); width:18px; height:18px;">
+                <span>Opsi B</span>
+              </label>
+              <input type="text" class="form-input" id="soal-latihan-opsi-1" required placeholder="Isi teks pilihan B..." style="margin-bottom:0; flex:1;">
+            </div>
+
+            <!-- Opsi C -->
+            <div style="display:flex; align-items:center; gap:10px; background:hsl(220,20%,97%); padding:8px 12px; border-radius:var(--radius-md); border:1px solid var(--border-light);">
+              <label style="display:flex; align-items:center; gap:6px; cursor:pointer; min-width:80px; font-weight:800; color:var(--primary);">
+                <input type="radio" name="soal-latihan-kunci" value="2" required style="accent-color:var(--secondary); width:18px; height:18px;">
+                <span>Opsi C</span>
+              </label>
+              <input type="text" class="form-input" id="soal-latihan-opsi-2" required placeholder="Isi teks pilihan C..." style="margin-bottom:0; flex:1;">
+            </div>
+
+            <!-- Opsi D -->
+            <div style="display:flex; align-items:center; gap:10px; background:hsl(220,20%,97%); padding:8px 12px; border-radius:var(--radius-md); border:1px solid var(--border-light);">
+              <label style="display:flex; align-items:center; gap:6px; cursor:pointer; min-width:80px; font-weight:800; color:var(--primary);">
+                <input type="radio" name="soal-latihan-kunci" value="3" required style="accent-color:var(--secondary); width:18px; height:18px;">
+                <span>Opsi D</span>
+              </label>
+              <input type="text" class="form-input" id="soal-latihan-opsi-3" required placeholder="Isi teks pilihan D..." style="margin-bottom:0; flex:1;">
+            </div>
+          </div>
+          <span style="font-size:11px; color:var(--text-secondary); margin-top:6px; display:inline-block;">* Klik bulatan radio di sebelah kiri untuk menentukan opsi mana yang merupakan <strong>kunci jawaban benar</strong>.</span>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:var(--space-md); border-top:1px solid var(--border-light); padding-top:var(--space-lg);">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-modal-soal-latihan">Batal</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-modal-soal-latihan" style="font-weight:800;">
+            <img src="assets/images/3d-icons/check.png" style="width:18px;height:18px;object-fit:contain;margin-right:6px;" alt="">
+            Simpan Butir Soal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Tambah / Edit Video -->
+  <div id="modal-video" class="sidebar-overlay" style="display:none; align-items:center; justify-content:center; padding:var(--space-md); z-index:999;">
+    <div class="card" style="max-width:620px; width:100%; max-height:90vh; overflow-y:auto; padding:var(--space-2xl); background:#ffffff; border-radius:var(--radius-xl); box-shadow:0 12px 40px rgba(0,0,0,0.25);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-lg); border-bottom:1px solid var(--border-light); padding-bottom:var(--space-md);">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <img src="assets/images/3d-icons/video.png" style="width:28px; height:28px; object-fit:contain;" alt="">
+          <h3 id="modal-video-title" style="margin:0; font-size:var(--fs-lg); font-weight:800; color:var(--text-primary);">Tambah Video Pembelajaran</h3>
+        </div>
+        <button type="button" class="btn btn-ghost" id="btn-close-modal-video" style="font-size:var(--fs-lg); font-weight:800; padding:4px 10px;">✕</button>
+      </div>
+
+      <form id="form-video">
+        <input type="hidden" id="video-doc-id" value="">
+
+        <div class="form-group">
+          <label class="form-label" for="video-input-judul">Judul Video Tutorial <span style="color:var(--error);">*</span></label>
+          <input type="text" class="form-input" id="video-input-judul" required placeholder="Contoh: Tutorial Praktik Perintah DDL SQL">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:var(--space-md);">
+          <div class="form-group">
+            <label class="form-label" for="video-select-kegiatan">Kegiatan Belajar <span style="color:var(--error);">*</span></label>
+            <select class="form-input" id="video-select-kegiatan" required style="font-weight:600;">
+              <option value="1">Kegiatan 1: Data Definition (DDL)</option>
+              <option value="2">Kegiatan 2: Data Manipulation (DML)</option>
+              <option value="3">Kegiatan 3: Data Control (DCL)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="video-input-urutan">Urutan Tampil</label>
+            <input type="number" class="form-input" id="video-input-urutan" value="1" min="1" max="50">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="video-input-url">Link URL YouTube <span style="color:var(--error);">*</span></label>
+          <input type="text" class="form-input" id="video-input-url" required placeholder="https://www.youtube.com/watch?v=... atau https://youtu.be/..." style="font-family:var(--font-code); font-size:var(--fs-sm);">
+          <small style="color:var(--text-secondary); font-size:11px; display:block; margin-top:4px;">
+            Bisa berupa link YouTube biasa (watch/share/shorts/embed). Sistem akan otomatis mengubahnya menjadi embed.
+          </small>
+        </div>
+
+        <!-- Live Preview Box -->
+        <div class="form-group" id="video-preview-box" style="margin-top:var(--space-md);">
+          <label class="form-label" style="display:flex; justify-content:space-between;">
+            <span>Pratinjau Video (Live Preview)</span>
+            <span id="preview-status" style="font-size:11px; color:var(--text-secondary); font-weight:normal;">Menunggu URL...</span>
+          </label>
+          <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:var(--radius-md); background:#0f172a; box-shadow:0 4px 14px rgba(0,0,0,0.1);">
+            <iframe id="video-preview-iframe" src="" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <div class="error-message" id="video-form-error" style="display:none; margin-bottom:var(--space-md);"></div>
+
+        <div style="display:flex; justify-content:flex-end; gap:var(--space-md); margin-top:var(--space-xl); border-top:1px solid var(--border-light); padding-top:var(--space-md);">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-modal-video">Batal</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-video" style="font-weight:800; min-width:140px;">
+            💾 Simpan Video
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Detail Jawaban Siswa -->
+  <div id="modal-detail-jawaban" class="sidebar-overlay" style="display:none; align-items:center; justify-content:center; padding:var(--space-md); z-index:999;">
+    <div class="card" style="max-width:760px; width:100%; max-height:85vh; overflow-y:auto; padding:var(--space-2xl); background:#ffffff; border-radius:var(--radius-xl); box-shadow:0 12px 40px rgba(0,0,0,0.25);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--space-lg); border-bottom:1px solid var(--border-light); padding-bottom:var(--space-md);">
+        <div>
+          <span class="badge badge-primary" style="margin-bottom:4px;">Lembar Jawaban Siswa</span>
+          <h3 id="detail-student-name" style="margin:0; font-size:var(--fs-xl); font-weight:800; color:var(--text-primary);">Nama Siswa</h3>
+          <p id="detail-student-score" style="color:var(--text-secondary); font-size:var(--fs-sm); margin:2px 0 0 0;">Skor: 0 • Kelas: -</p>
+        </div>
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('modal-detail-jawaban').style.display='none'" style="font-size:var(--fs-lg); font-weight:800; padding:4px 10px;">✕</button>
+      </div>
+
+      <div id="detail-answers-container" style="display:flex; flex-direction:column; gap:var(--space-lg);">
+        <!-- Questions & Student Answers rendered here -->
+      </div>
+
+      <div style="margin-top:var(--space-xl); text-align:right; border-top:1px solid var(--border-light); padding-top:var(--space-md);">
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-detail-jawaban').style.display='none'">Tutup Rincian</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="assets/js/guru.js?v=7.2"></script>
+
+</body>
+</html>

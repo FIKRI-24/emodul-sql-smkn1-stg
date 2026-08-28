@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="50%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="tealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Ring / Circle -->
+  <circle cx="80" cy="80" r="74" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" filter="url(#shadow)"/>
+  <circle cx="80" cy="80" r="68" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3 2"/>
+
+  <!-- Top Ribbon Banner Text Arc Placeholder: SMKN 1 SINTUK TOBOH GADANG -->
+  <path id="textArcTop" d="M 22 80 A 58 58 0 0 1 138 80" fill="none" stroke="none"/>
+  <text font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="8.5" font-weight="800" fill="#1e3a8a" letter-spacing="1">
+    <textPath href="#textArcTop" startOffset="50%" text-anchor="middle">
+      SMK NEGERI 1 SINTUK TOBOH GADANG
+    </textPath>
+  </text>
+
+  <!-- Inner Shield -->
+  <path d="M 80 34 C 104 34 116 42 116 68 C 116 98 80 120 80 120 C 80 120 44 98 44 68 C 44 42 56 34 80 34 Z" fill="url(#shieldGrad)" stroke="#f59e0b" stroke-width="2.5"/>
+
+  <!-- Gear & Torch / Education Wings in Shield -->
+  <!-- Gear -->
+  <circle cx="80" cy="74" r="22" fill="#0f172a" opacity="0.3"/>
+  <circle cx="80" cy="74" r="16" fill="#ffffff"/>
+  
+  <!-- Open Book -->
+  <path d="M 80 77 Q 70 70 60 73 L 60 87 Q 70 84 80 88 Q 90 84 100 87 L 100 73 Q 90 70 80 77 Z" fill="#ffffff" stroke="#1e3a8a" stroke-width="1.5"/>
+  <line x1="80" y1="77" x2="80" y2="88" stroke="#1e3a8a" stroke-width="1.5"/>
+  
+  <!-- Flaming Torch of Knowledge -->
+  <path d="M 80 50 C 76 56 75 62 80 68 C 85 62 84 56 80 50 Z" fill="url(#goldGrad)"/>
+  <path d="M 80 53 C 78 57 78 61 80 65 C 82 61 82 57 80 53 Z" fill="#ffffff" opacity="0.8"/>
+  <polygon points="77,68 83,68 81,75 79,75" fill="#f59e0b"/>
+
+  <!-- Padang Pariaman / Bintang & Sayap -->
+  <polygon points="80,38 82,43 87,43 83,46 85,51 80,48 75,51 77,46 73,43 78,43" fill="#fbbf24"/>
+
+  <!-- Bottom Banner: STG / KAB. PADANG PARIAMAN -->
+  <path d="M 38 126 Q 80 144 122 126 Q 80 136 38 126 Z" fill="url(#goldGrad)" stroke="#b45309" stroke-width="1"/>
+  <text x="80" y="132" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="6.5" font-weight="800" fill="#1e3a8a" text-anchor="middle" letter-spacing="0.5">
+    KAB. PADANG PARIAMAN
+  </text>
+</svg>

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Modul Interaktif SQL — SMK Negeri 1 Sintuk Toboh Gadang</title>
+  <meta name="description" content="E-Modul Interaktif Berbasis Website Mengenal Perintah SQL untuk Kelas XI Rekayasa Perangkat Lunak SMK Negeri 1 Sintuk Toboh Gadang">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.1">
+  <style>
+    /* ===== Modern Cover / Landing Page Styles ===== */
+    body {
+      background: linear-gradient(145deg, #0b1329 0%, #172554 50%, #0f172a 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background glows */
+    .ambient-glow-1 {
+      position: absolute;
+      top: -10%;
+      right: -5%;
+      width: 550px;
+      height: 550px;
+      border-radius: 50%;
+      background: radial-gradient(circle, hsla(231, 75%, 64%, 0.22) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .ambient-glow-2 {
+      position: absolute;
+      bottom: -10%;
+      left: -5%;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, hsla(165, 80%, 48%, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Header Nav */
+    .landing-header {
+      padding: var(--space-lg) var(--space-2xl);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .dual-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.07);
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .brand-logo-img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+    }
+
+    .brand-text-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+    }
+
+    .brand-sub {
+      font-size: 10px;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: 0.5px;
+    }
+
+    .divider-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #64748b;
+    }
+
+    /* Main Cover Container */
+    .cover-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--space-3xl) var(--space-xl);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .cover-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(37, 99, 235, 0.18);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      padding: 6px 18px;
+      border-radius: var(--radius-full);
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      color: #93c5fd;
+      margin-bottom: var(--space-xl);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      animation: fadeInDown 0.6s ease-out;
+    }
+
+    .cover-main-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: var(--space-md);
+      color: #ffffff;
+      max-width: 850px;
+      animation: fadeInUp 0.7s ease-out 0.1s both;
+    }
+
+    .cover-main-title span {
+      background: linear-gradient(135deg, #60a5fa, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cover-description {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: #cbd5e1;
+      max-width: 720px;
+      line-height: 1.7;
+      margin-bottom: var(--space-2xl);
+      animation: fadeInUp 0.7s ease-out 0.2s both;
+    }
+
+    /* Dual Logos Spotlight */
+    .institutions-spotlight {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xl);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-2xl);
+      animation: fadeInUp 0.7s ease-out 0.3s both;
+    }
+
+    .institution-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 20px;
+      border-radius: var(--radius-xl);
+      backdrop-filter: blur(12px);
+      text-align: left;
+      transition: all var(--transition-base);
+    }
+
+    .institution-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .institution-card img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
+
+    .institution-card .inst-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+
+    .institution-card .inst-role {
+      font-size: 11px;
+      font-weight: 600;
+      color: #38bdf8;
+    }
+
+    /* Features Grid */
+    .features-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-md);
+      width: 100%;
+      max-width: 960px;
+      margin-bottom: var(--space-3xl);
+      animation: fadeInUp 0.7s ease-out 0.4s both;
+    }
+
+    .feature-item {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg) var(--space-md);
+      text-align: center;
+      transition: transform var(--transition-base);
+    }
+
+    .feature-item:hover {
+      transform: translateY(-3px);
+      border-color: rgba(96, 165, 250, 0.3);
+    }
+
+    .feature-item img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      margin-bottom: 8px;
+    }
+
+    .feature-item h4 {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .feature-item p {
+      font-size: 11px;
+      color: #94a3b8;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    /* Action Button CTA */
+    .cta-button-wrap {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeInUp 0.7s ease-out 0.5s both;
+    }
+
+    .btn-enter-app {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+      color: #ffffff;
+      padding: 16px 36px;
+      font-size: var(--fs-md);
+      font-weight: 800;
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      box-shadow: 0 8px 30px hsla(165, 80%, 40%, 0.4);
+      transition: all var(--transition-base);
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-enter-app:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 40px hsla(165, 80%, 40%, 0.55);
+      color: #ffffff;
+    }
+
+    .btn-guide-quick {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #f1f5f9;
+      padding: 16px 28px;
+      font-size: var(--fs-md);
+      font-weight: 700;
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all var(--transition-base);
+    }
+
+    .btn-guide-quick:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      color: #ffffff;
+    }
+
+    /* Footer */
+    .landing-footer {
+      padding: var(--space-xl);
+      text-align: center;
+      font-size: var(--fs-xs);
+      color: #64748b;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Keyframes */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 850px) {
+      .landing-header { flex-direction: column; gap: var(--space-md); }
+      .features-summary { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 550px) {
+      .features-summary { grid-template-columns: 1fr; }
+      .institutions-spotlight { flex-direction: column; width: 100%; }
+      .institution-card { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+
+  <!-- Header Institusi -->
+  <header class="landing-header">
+    <div class="dual-brand">
+      <div class="logo-badge">
+        <img src="assets/images/logos/logo-smkn1stg.png?v=5" class="brand-logo-img" alt="Logo SMKN 1 STG">
+        <div class="brand-text-block">
+          <span class="brand-title">SMKN 1 SINTUK TOBOH GADANG</span>
+          <span class="brand-sub">Sekolah Mitra Penelitian</span>
+        </div>
+      </div>
+      <div class="divider-dot"></div>
+      <div class="logo-badge">
+        <img src="assets/images/logos/logo-upgrisba.png?v=4" class="brand-logo-img" alt="Logo UPGRISBA">
+        <div class="brand-text-block">
+          <span class="brand-title">UNIVERSITAS PGRI SUMATERA BARAT</span>
+          <span class="brand-sub">Program Studi Pendidikan Informatika</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <a href="login.html" class="btn btn-secondary btn-sm" style="background:rgba(255,255,255,0.08);color:#fff;border-color:rgba(255,255,255,0.2);">
+        🔑 Masuk / Login Siswa
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Hero Cover -->
+  <main class="cover-container">
+
+    <div class="cover-badge-pill">
+      <img src="assets/images/3d-icons/database.png" style="width:16px;height:16px;object-fit:contain;" alt="">
+      <span>Media Pembelajaran Interaktif Basis Data</span>
+    </div>
+
+    <h1 class="cover-main-title">
+      E-Modul Interaktif <span>Perintah SQL</span>
+    </h1>
+
+    <p class="cover-description">
+      Media pembelajaran terstruktur untuk mata pelajaran <strong>Basis Data</strong> Kelas XI Rekayasa Perangkat Lunak (RPL). Dilengkapi materi konsep DDL, DML, DCL, video pembelajaran, latihan terukur (KKM ≥ 80), dan <strong>simulasi praktikum SQL langsung di browser</strong>.
+    </p>
+
+    <!-- Institution Spotlights -->
+    <section class="institutions-spotlight">
+      <div class="institution-card">
+        <img src="assets/images/logos/logo-smkn1stg.png?v=5" alt="SMKN 1 STG">
+        <div>
+          <div class="inst-role">Instansi Sekolah</div>
+          <div class="inst-title">SMK Negeri 1 Sintuk Toboh Gadang</div>
+          <div style="font-size:10px;color:#94a3b8;">Jurusan Rekayasa Perangkat Lunak (RPL)</div>
+        </div>
+      </div>
+
+      <div class="institution-card">
+        <img src="assets/images/logos/logo-upgrisba.png?v=4" alt="UPGRISBA">
+        <div>
+          <div class="inst-role">Pengembang & Peneliti</div>
+          <div class="inst-title">Okfiqha Risdawati (NIM 2201100058)</div>
+          <div style="font-size:10px;color:#94a3b8;">Pendidikan Informatika • UPGRISBA</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Overview -->
+    <section class="features-summary">
+      <div class="feature-item">
+        <img src="assets/images/3d-icons/book.png" alt="Petunjuk">
+        <h4>1. Panduan & CP/ATP</h4>
+        <p>Alur sekuensial terarah sesuai kurikulum kejuruan</p>
+      </div>
+
+      <div class="feature-item">
+        <img src="assets/images/3d-icons/target.png" alt="Kegiatan Belajar">
+        <h4>2. 3 Kegiatan Belajar</h4>
+        <p>Materi DDL, DML, dan DCL terstruktur mendalam</p>
+      </div>
+
+      <div class="feature-item">
+        <img src="assets/images/3d-icons/trophy.png" alt="Latihan Terukur">
+        <h4>3. Latihan KKM ≥ 80</h4>
+        <p>Syarat kelulusan berjenjang per kegiatan belajar</p>
+      </div>
+
+      <div class="feature-item">
+        <img src="assets/images/3d-icons/laptop.png" alt="Playground SQL">
+        <h4>4. Simulator SQL</h4>
+        <p>Praktik langsung query in-browser tanpa server</p>
+      </div>
+    </section>
+
+    <!-- CTA Buttons -->
+    <div class="cta-button-wrap">
+      <a href="login.html" class="btn-enter-app">
+        <img src="assets/images/3d-icons/rocket.png" style="width:24px;height:24px;object-fit:contain;" alt="">
+        <span>Buka E-Modul Pembelajaran</span>
+        <span>→</span>
+      </a>
+
+      <a href="panduan.html" class="btn-guide-quick">
+        <img src="assets/images/3d-icons/book.png" style="width:20px;height:20px;object-fit:contain;" alt="">
+        <span>Petunjuk Penggunaan</span>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <p>© 2026 E-Modul Interaktif SQL • SMK Negeri 1 Sintuk Toboh Gadang & Universitas PGRI Sumatera Barat</p>
+  </footer>
+
+</body>
+</html>

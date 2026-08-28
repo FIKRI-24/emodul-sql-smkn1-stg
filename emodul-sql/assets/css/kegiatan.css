@@ -1,0 +1,647 @@
+/* ============================================
+   kegiatan.css — Stylesheet Modul Kegiatan Belajar
+   SMK Negeri 1 Sintuk Toboh Gadang
+   (Clean Borderless Design System)
+   ============================================ */
+
+.page-wrapper {
+  min-height: 100vh;
+  background: var(--bg-body);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-2xl);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-weight: 800;
+  font-size: var(--fs-md);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.navbar-brand-icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+/* Content Container */
+.content-container {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-xl);
+  width: 100%;
+  flex: 1;
+}
+
+/* Loading Screen */
+.loading-screen {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.loading-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3.5px solid var(--border-light);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== 3D Icons Styling ===== */
+.icon-3d {
+  display: inline-block;
+  object-fit: contain;
+  vertical-align: middle;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.08));
+}
+
+.tab-3d-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+  transition: transform var(--transition-fast);
+}
+
+.tab-btn:hover .tab-3d-icon,
+.tab-btn.active .tab-3d-icon {
+  transform: scale(1.18);
+}
+
+.section-3d-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  vertical-align: middle;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.06));
+}
+
+.header-3d-icon {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
+  flex-shrink: 0;
+}
+
+.btn-3d-icon,
+.btn img {
+  width: 20px !important;
+  height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
+  object-fit: contain !important;
+  vertical-align: middle !important;
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+  margin-right: 6px;
+}
+
+.badge-3d-icon,
+.badge img {
+  width: 16px !important;
+  height: 16px !important;
+  max-width: 16px !important;
+  max-height: 16px !important;
+  object-fit: contain !important;
+  vertical-align: middle !important;
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+  margin-right: 4px;
+}
+
+/* ===== Kegiatan Header (Borderless with Soft Shadow) ===== */
+.kegiatan-header {
+  background: #ffffff;
+  border: none;
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+  margin-bottom: var(--space-xl);
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.kegiatan-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: var(--radius-full);
+  background: var(--primary-subtle);
+  color: var(--primary);
+  border: none;
+  margin-bottom: var(--space-sm);
+}
+
+.kegiatan-header h1 {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+  line-height: 1.25;
+}
+
+.kegiatan-header p {
+  color: var(--text-secondary);
+  font-size: var(--fs-base);
+  margin: 0;
+}
+
+/* ===== Segmented Tabs ===== */
+.kegiatan-tabs {
+  display: flex;
+  gap: var(--space-xs);
+  background: hsl(220, 20%, 93%);
+  padding: 6px;
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-xl);
+  border: none;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-family);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.tab-btn.active {
+  background: #ffffff;
+  color: var(--primary);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  font-weight: 700;
+}
+
+/* Tab Panels */
+.tab-panel {
+  display: none;
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Section Card (Borderless with Soft Shadow) */
+.section-card {
+  background: #ffffff;
+  border: none;
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.05);
+  margin-bottom: var(--space-xl);
+}
+
+.section-card h2 {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* Tujuan Pembelajaran List */
+.tujuan-list {
+  padding-left: 0;
+  margin: var(--space-lg) 0;
+  counter-reset: custom-counter;
+}
+
+.tujuan-list li {
+  position: relative;
+  padding: var(--space-md) var(--space-lg) var(--space-md) 3.5rem;
+  margin-bottom: var(--space-sm);
+  background: hsl(220, 20%, 98%);
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--fs-base);
+  line-height: 1.6;
+}
+
+.tujuan-list li::before {
+  content: counter(custom-counter);
+  counter-increment: custom-counter;
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+}
+
+/* ===== Materi Item Cards ===== */
+.materi-item {
+  background: #ffffff;
+  border: none;
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+  margin-bottom: var(--space-xl);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+}
+
+.materi-item:last-child {
+  margin-bottom: 0;
+}
+
+.materi-body {
+  color: var(--text-primary);
+  font-size: 1.02rem;
+  line-height: 1.8;
+}
+
+.materi-body p {
+  color: var(--text-primary);
+  font-size: 1.02rem;
+  line-height: 1.8;
+  margin-bottom: var(--space-md);
+}
+
+.materi-body h3 {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: var(--space-lg) 0 var(--space-sm) 0;
+}
+
+.materi-body ul {
+  list-style: disc;
+  padding-left: var(--space-xl);
+  margin: var(--space-md) 0 var(--space-lg) 0;
+}
+
+.materi-body ol {
+  list-style: decimal;
+  padding-left: var(--space-xl);
+  margin: var(--space-md) 0 var(--space-lg) 0;
+}
+
+.materi-body li {
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.75;
+  margin-bottom: var(--space-xs);
+}
+
+.materi-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-lg) 0;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.materi-body th, .materi-body td {
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--border-light);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
+.materi-body th {
+  background: hsl(220, 25%, 96%);
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+/* ===== Video Player Container ===== */
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: #000;
+  box-shadow: var(--shadow-md);
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ===== Interactive Latihan Cards ===== */
+.latihan-card {
+  background: #ffffff;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-lg);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.latihan-pertanyaan {
+  font-size: var(--fs-base);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+  line-height: 1.6;
+}
+
+.opsi-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.opsi-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: hsl(220, 20%, 97.5%);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--fs-sm);
+}
+
+.opsi-label:hover {
+  background: var(--primary-subtle);
+}
+
+.opsi-label.selected {
+  background: hsla(231, 68%, 52%, 0.08);
+  border-color: var(--primary);
+  font-weight: 600;
+}
+
+.opsi-label.correct {
+  background: var(--success-subtle);
+  border-color: var(--success);
+  color: var(--success);
+  font-weight: 700;
+}
+
+.opsi-label.wrong {
+  background: var(--error-subtle);
+  border-color: var(--error);
+  color: var(--error);
+  font-weight: 700;
+}
+
+/* Feedback box */
+.feedback-box {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm);
+  display: none;
+  border: none;
+}
+
+.feedback-box.show {
+  display: flex;
+  align-items: center;
+}
+
+/* ===== Modern LMS Bottom Navigation Card ===== */
+.bottom-nav-card {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl) var(--space-2xl);
+  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border-light);
+  margin-top: var(--space-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.bottom-nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.bottom-status-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.bottom-status-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: hsl(220, 25%, 96%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bottom-status-3d {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.bottom-status-sub {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.bottom-status-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-base);
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.status-indicator-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-indicator-dot.warning {
+  background: var(--warning);
+  box-shadow: 0 0 0 3px var(--warning-subtle);
+}
+
+.status-indicator-dot.success {
+  background: var(--success);
+  box-shadow: 0 0 0 3px var(--success-subtle);
+}
+
+.bottom-status-tip {
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  font-weight: 600;
+  background: hsl(220, 20%, 97%);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+}
+
+.bottom-nav-divider {
+  height: 1px;
+  background: var(--border-light);
+  width: 100%;
+}
+
+.bottom-nav-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.nav-action-left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.nav-action-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav-btn-step {
+  padding: 0.65rem 1.4rem;
+  font-weight: 700;
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 46px;
+}
+
+.nav-btn-next {
+  background: linear-gradient(135deg, hsl(231, 75%, 52%), hsl(231, 75%, 44%));
+  color: #ffffff;
+}
+
+.nav-btn-next:hover {
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px var(--primary-glow);
+}
+
+.nav-btn-primary {
+  padding: 0.75rem 1.8rem;
+  font-weight: 800;
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-sm);
+  min-height: 46px;
+  box-shadow: 0 4px 14px var(--primary-glow);
+}
+
+.nav-arrow {
+  font-size: 1.25rem;
+  line-height: 1;
+  font-weight: 800;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar { padding: var(--space-sm) var(--space-md); }
+  .content-container { padding: var(--space-md); }
+  .kegiatan-tabs { flex-wrap: nowrap; overflow-x: auto; }
+  .tab-btn { padding: 8px 12px; font-size: var(--fs-xs); }
+  .kegiatan-header { flex-direction: column; text-align: center; }
+  .bottom-nav-actions {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+  .nav-action-left, .nav-action-center, .nav-action-right {
+    justify-content: stretch;
+  }
+  .nav-action-left .btn, .nav-action-center .btn, .nav-action-right .btn {
+    width: 100%;
+  }
+  .bottom-status-tip {
+    display: none;
+  }
+}

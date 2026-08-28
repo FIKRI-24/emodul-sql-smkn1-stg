@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kegiatan Belajar 3 — E-Modul Interaktif SQL</title>
+  <meta name="description" content="Kegiatan Belajar 3: Data Control Language (DCL) & Keamanan Basis Data">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css?v=2.1">
+  <link rel="stylesheet" href="../assets/css/kegiatan.css?v=2.1">
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-spinner"></div>
+      <p style="color:var(--text-secondary);font-weight:500;">Memeriksa Prasyarat & Memuat Kegiatan Belajar 3…</p>
+    </div>
+
+    <!-- Lock Screen (Jika belum lulus Kegiatan 2) -->
+    <div id="locked-screen" class="gated-screen" style="display:none;">
+      <div class="gated-card">
+        <div class="gated-icon-wrap">
+          <img src="../assets/images/3d-icons/warning.png" alt="Terkunci">
+        </div>
+        <span class="badge badge-warning" style="margin-bottom:8px;">Tahap Prasyarat Belum Terpenuhi</span>
+        <h2 style="font-size:var(--fs-xl);font-weight:900;margin-bottom:8px;color:var(--text-primary);">Kegiatan Belajar 3 Terkunci</h2>
+        <p style="color:var(--text-secondary);font-size:var(--fs-sm);line-height:1.6;margin-bottom:var(--space-lg);" id="lock-reason-text">
+          Untuk membuka Kegiatan Belajar 3, Anda harus menyelesaikan Latihan pada <strong>Kegiatan Belajar 2</strong> dengan nilai minimal <strong>80 / 100</strong> (KKM ≥ 80).
+        </p>
+        <div style="background:hsl(220,25%,97%);padding:12px;border-radius:var(--radius-md);margin-bottom:var(--space-xl);" id="lock-score-info">
+          <span style="font-size:var(--fs-xs);color:var(--text-secondary);">Nilai Latihan Kegiatan 2 Anda Saat Ini:</span>
+          <div style="font-size:var(--fs-lg);font-weight:800;color:hsl(35,90%,38%);" id="current-score-display">0 / 100</div>
+        </div>
+        <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
+          <a href="kegiatan-2.html" class="btn btn-primary">
+            <img src="../assets/images/3d-icons/laptop.png" class="btn-3d-icon" alt="">
+            Kerjakan Latihan Kegiatan 2 →
+          </a>
+          <a href="../beranda.html" class="btn btn-secondary">
+            Kembali ke Beranda
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- App Content -->
+    <div id="app-content" style="display: none;">
+
+      <!-- Navbar -->
+      <nav class="navbar">
+        <a href="../beranda.html" class="navbar-brand">
+          <div class="navbar-brand-icon">SQL</div>
+          <div>
+            <div style="line-height:1.1;">E-Modul SQL</div>
+            <div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px;">SMKN 1 SINTUK TOBOH GADANG</div>
+          </div>
+        </a>
+        <a href="../beranda.html" class="btn btn-secondary btn-sm">← Kembali ke Beranda</a>
+      </nav>
+
+      <main class="content-container">
+
+        <!-- Header -->
+        <div class="kegiatan-header">
+          <img src="../assets/images/3d-icons/key.png" class="header-3d-icon" alt="Kegiatan 3">
+          <div>
+            <span class="kegiatan-badge">
+              <img src="../assets/images/3d-icons/database.png" class="badge-3d-icon" alt="">
+              Kegiatan Belajar 3
+            </span>
+            <h1>Data Control Language (DCL) & Keamanan Basis Data</h1>
+            <p>Memahami konsep keamanan database, pembuatan pengguna baru (CREATE USER), serta pengelolaan hak akses otorisasi (GRANT & REVOKE).</p>
+          </div>
+        </div>
+
+        <!-- Tab navigation -->
+        <div class="kegiatan-tabs">
+          <button class="tab-btn active" data-tab="tujuan">
+            <img src="../assets/images/3d-icons/target.png" class="tab-3d-icon" alt="">
+            <span>Tujuan</span>
+          </button>
+          <button class="tab-btn" data-tab="materi">
+            <img src="../assets/images/3d-icons/book.png" class="tab-3d-icon" alt="">
+            <span>Materi</span>
+          </button>
+          <button class="tab-btn" data-tab="video">
+            <img src="../assets/images/3d-icons/video.png" class="tab-3d-icon" alt="">
+            <span>Video</span>
+          </button>
+          <button class="tab-btn" data-tab="latihan">
+            <img src="../assets/images/3d-icons/pencil.png" class="tab-3d-icon" alt="">
+            <span>Latihan (KKM 80)</span>
+          </button>
+        </div>
+
+        <!-- Tab: Tujuan -->
+        <section class="tab-panel active" id="panel-tujuan">
+          <div class="section-card">
+            <h2>
+              <img src="../assets/images/3d-icons/target.png" class="section-3d-icon" alt="">
+              Tujuan Pembelajaran
+            </h2>
+            <p>Setelah mempelajari kegiatan belajar 3 ini, peserta didik diharapkan mampu:</p>
+            <ol class="tujuan-list">
+              <li>Memahami pentingnya konsep otorisasi, autentikasi, dan keamanan data dalam sistem manajemen basis data relasional (RDBMS).</li>
+              <li>Menerapkan sintaks <code>CREATE USER</code> untuk membuat akun pengguna database baru dengan autentikasi kata sandi.</li>
+              <li>Menerapkan perintah <code>GRANT</code> untuk memberikan hak akses manipulasi tertentu (SELECT, INSERT, UPDATE) pada database/tabel.</li>
+              <li>Menerapkan perintah <code>SHOW GRANTS FOR</code> untuk memeriksa izin akses yang aktif pada suatu akun pengguna.</li>
+              <li>Menerapkan perintah <code>REVOKE</code> untuk mencabut kembali izin hak akses pengguna.</li>
+              <li>Mempraktikkan seluruh ragam query SQL (DDL, DML, DCL) secara langsung melalui simulator Playground SQL interaktif.</li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- Tab: Materi -->
+        <section class="tab-panel" id="panel-materi">
+          <div class="section-card">
+            <h2>
+              <img src="../assets/images/3d-icons/book.png" class="section-3d-icon" alt="">
+              Materi Pembelajaran
+            </h2>
+            <div id="materi-container">
+              <div class="loading-screen" style="min-height:200px;">
+                <div class="loading-spinner"></div>
+                <p>Memuat materi dari database…</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab: Video -->
+        <section class="tab-panel" id="panel-video">
+          <div class="section-card">
+            <h2>
+              <img src="../assets/images/3d-icons/video.png" class="section-3d-icon" alt="">
+              Video Pembelajaran
+            </h2>
+            <div id="video-container">
+              <div class="loading-screen" style="min-height:200px;">
+                <div class="loading-spinner"></div>
+                <p>Memuat video…</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab: Latihan -->
+        <section class="tab-panel" id="panel-latihan">
+          <div class="section-card">
+            <h2>
+              <img src="../assets/images/3d-icons/pencil.png" class="section-3d-icon" alt="">
+              Latihan Pemahaman Kegiatan 3
+            </h2>
+            <p style="color:var(--text-secondary);font-size:var(--fs-sm);margin-bottom:var(--space-lg);">
+              Jawab seluruh soal latihan di bawah ini. Syarat kelulusan untuk membuka Evaluasi Akhir adalah <strong>nilai minimal 80</strong> (KKM ≥ 80).
+            </p>
+            <div id="latihan-container">
+              <div class="loading-screen" style="min-height:200px;">
+                <div class="loading-spinner"></div>
+                <p>Memuat latihan…</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Bottom Navigation Card -->
+        <div class="bottom-nav-card">
+          <!-- Top Bar: Status Info & Hint -->
+          <div class="bottom-nav-header">
+            <div class="bottom-status-group">
+              <div class="bottom-status-icon-wrap">
+                <img src="../assets/images/3d-icons/trophy.png" class="bottom-status-3d" alt="">
+              </div>
+              <div>
+                <span class="bottom-status-sub">Status Kelulusan Kegiatan 3:</span>
+                <div id="kegiatan-status-label" class="bottom-status-title">
+                  <span class="status-indicator-dot warning"></span>
+                  <span>Belum Mengambil Latihan (KKM: 80)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hint -->
+            <div class="bottom-status-tip">
+              <span>💡 Raih nilai minimal 80 pada Latihan Kegiatan 3 untuk membuka Evaluasi Akhir.</span>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="bottom-nav-divider"></div>
+
+          <!-- Action Buttons Grid -->
+          <div class="bottom-nav-actions">
+            <!-- Left Action -->
+            <div class="nav-action-left">
+              <a href="kegiatan-2.html" class="btn btn-secondary nav-btn-step">
+                <span class="nav-arrow">‹</span> Kegiatan 2
+              </a>
+            </div>
+
+            <!-- Right Next Action -->
+            <div class="nav-action-right">
+              <a href="../evaluasi.html" class="btn btn-secondary nav-btn-step" id="btn-next-step" style="opacity:0.6;pointer-events:none;">
+                🔒 Ambil Evaluasi Akhir <span class="nav-arrow">›</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import { authReady } from "../assets/js/auth-guard.js";
+    import { db, doc, getDoc } from "../assets/js/firebase-config.js";
+    import {
+      loadMateri, loadAllVideos, loadAllLatihan,
+      renderMateriHtml, renderVideoHtml, renderAllLatihanHtml, showToast
+    } from "../assets/js/materi-loader.js?v=3.1";
+
+    const KEGIATAN_KE = 3;
+
+    // ---- Tab Switching ----
+    const tabBtns   = document.querySelectorAll(".tab-btn");
+    const tabPanels = document.querySelectorAll(".tab-panel");
+
+    tabBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetTab = btn.dataset.tab;
+
+        tabBtns.forEach((b) => b.classList.remove("active"));
+        tabPanels.forEach((p) => p.classList.remove("active"));
+
+        btn.classList.add("active");
+        const activePanel = document.getElementById(`panel-${targetTab}`);
+        if (activePanel) activePanel.classList.add("active");
+
+        window.scrollTo({ top: 120, behavior: "smooth" });
+      });
+    });
+
+    // ---- Auth & Load Data ----
+    authReady
+      .then(async (userData) => {
+        const loadingScreen = document.getElementById("loading-screen");
+        const lockedScreen = document.getElementById("locked-screen");
+        const appContent = document.getElementById("app-content");
+
+        // Role Guru bypasses lock
+        if (userData.role === "guru") {
+          loadingScreen.style.display = "none";
+          appContent.style.display = "block";
+          await loadPageData(userData, true);
+          return;
+        }
+
+        // Siswa: Cek apakah sudah lulus Kegiatan 2 (Nilai >= 80)
+        try {
+          const progresDoc = await getDoc(doc(db, "progres", userData.uid));
+          const pData = progresDoc.exists() ? progresDoc.data() : {};
+
+          let k2Score = 0;
+          let k2Lolos = false;
+
+          if (pData.kegiatan2) {
+            k2Score = pData.kegiatan2.nilaiLatihan || 0;
+            k2Lolos = !!pData.kegiatan2.lolos;
+          } else if (pData.kegiatan2Selesai) {
+            k2Score = 100;
+            k2Lolos = true;
+          }
+
+          loadingScreen.style.display = "none";
+
+          if (!k2Lolos) {
+            lockedScreen.style.display = "flex";
+            const scoreDisplay = document.getElementById("current-score-display");
+            if (scoreDisplay) scoreDisplay.textContent = `${k2Score} / 100`;
+            return;
+          }
+
+          appContent.style.display = "block";
+          await loadPageData(userData, false, pData);
+        } catch (err) {
+          console.warn("[Kegiatan3] Gagal cek progres:", err);
+          loadingScreen.style.display = "none";
+          appContent.style.display = "block";
+          await loadPageData(userData, false);
+        }
+      })
+      .catch((err) => {
+        console.error("[Kegiatan3] Auth error:", err);
+      });
+
+    async function loadPageData(userData, isGuru = false, pData = {}) {
+      // 1. Fetch Materi
+      const materiList = await loadMateri(KEGIATAN_KE);
+      renderMateriHtml(materiList, "materi-container");
+
+      // 2. Fetch Video
+      const videoList = await loadAllVideos(KEGIATAN_KE, materiList);
+      renderVideoHtml(videoList, "video-container");
+
+      // 3. Status Awal Nilai Latihan
+      let existingScore = 0;
+      let isLolos = false;
+
+      if (pData.kegiatan3) {
+        existingScore = pData.kegiatan3.nilaiLatihan || 0;
+        isLolos = existingScore >= 80;
+      } else if (pData.kegiatan3Selesai) {
+        existingScore = 100;
+        isLolos = true;
+      }
+
+      if (isGuru) {
+        isLolos = true;
+      }
+
+      updateNavigationState(existingScore, isLolos, isGuru);
+
+      // 4. Fetch Latihan
+      const latihanList = await loadAllLatihan(KEGIATAN_KE, materiList);
+      renderAllLatihanHtml(latihanList, "latihan-container", KEGIATAN_KE, userData.uid, (skor, lolos) => {
+        updateNavigationState(skor, lolos, isGuru);
+      });
+    }
+
+    function updateNavigationState(skor, isLolos, isGuru = false) {
+      const statusLabel = document.getElementById("kegiatan-status-label");
+      const btnNext = document.getElementById("btn-next-step");
+
+      if (isLolos || isGuru) {
+        if (statusLabel) {
+          statusLabel.innerHTML = `
+            <span class="status-indicator-dot success"></span>
+            <span style="color:var(--success);font-weight:800;">✓ Lulus KKM (Nilai: ${skor}/100)</span>
+          `;
+        }
+        if (btnNext) {
+          btnNext.style.opacity = "1";
+          btnNext.style.pointerEvents = "auto";
+          btnNext.className = "btn btn-primary nav-btn-step";
+          btnNext.innerHTML = 'Ambil Evaluasi Akhir <span class="nav-arrow">›</span>';
+        }
+      } else if (skor > 0) {
+        if (statusLabel) {
+          statusLabel.innerHTML = `
+            <span class="status-indicator-dot warning"></span>
+            <span style="color:hsl(35,90%,38%);font-weight:800;">⚠️ Belum Lulus (Nilai: ${skor}/100 — KKM: 80)</span>
+          `;
+        }
+        if (btnNext) {
+          btnNext.style.opacity = "0.6";
+          btnNext.style.pointerEvents = "none";
+          btnNext.className = "btn btn-secondary nav-btn-step";
+          btnNext.innerHTML = '🔒 Ambil Evaluasi Akhir (KKM: 80)';
+        }
+      } else {
+        if (statusLabel) {
+          statusLabel.innerHTML = `
+            <span class="status-indicator-dot warning"></span>
+            <span style="color:var(--text-secondary);">Belum Mengambil Latihan (KKM: 80)</span>
+          `;
+        }
+        if (btnNext) {
+          btnNext.style.opacity = "0.6";
+          btnNext.style.pointerEvents = "none";
+          btnNext.className = "btn btn-secondary nav-btn-step";
+          btnNext.innerHTML = '🔒 Ambil Evaluasi Akhir (KKM: 80)';
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>

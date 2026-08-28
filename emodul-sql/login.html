@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masuk & Daftar Siswa — E-Modul Interaktif SQL</title>
+  <meta name="description" content="Halaman login dan registrasi siswa E-Modul Interaktif SQL — SMK Negeri 1 Sintuk Toboh Gadang">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.1">
+  <style>
+    /* ===== Login Page Styles ===== */
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, hsl(222, 47%, 11%) 0%, hsl(231, 42%, 22%) 50%, hsl(231, 56%, 30%) 100%);
+      padding: var(--space-xl);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background decorative elements */
+    .login-page::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--primary-glow), transparent 70%);
+      top: -200px;
+      right: -150px;
+      pointer-events: none;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      position: relative;
+      z-index: 1;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Auth Tab Switcher */
+    .auth-tab-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: hsl(220, 20%, 95%);
+      padding: 4px;
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-xl);
+      gap: 4px;
+    }
+
+    .auth-tab-btn {
+      padding: 8px 12px;
+      font-size: var(--fs-xs);
+      font-weight: 800;
+      color: var(--text-secondary);
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: var(--font-family);
+    }
+
+    .auth-tab-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Form Panels */
+    .auth-form-panel {
+      display: none;
+    }
+
+    .auth-form-panel.active {
+      display: block;
+      animation: tabFadeIn 0.3s ease-out;
+    }
+
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Password field wrapper */
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: var(--fs-md);
+      color: var(--text-secondary);
+      padding: 8px 12px;
+      min-width: 40px;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: color var(--transition-fast);
+    }
+
+    .password-toggle:hover {
+      color: var(--primary);
+    }
+
+    .btn-submit-auth {
+      width: 100%;
+      margin-top: var(--space-md);
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: var(--space-xl);
+      font-size: var(--fs-xs);
+      color: var(--text-secondary);
+    }
+
+    .auth-switch-prompt {
+      text-align: center;
+      margin-top: var(--space-md);
+      font-size: var(--fs-xs);
+      color: var(--text-secondary);
+    }
+
+    .auth-switch-prompt a {
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .login-page {
+        padding: var(--space-md);
+      }
+
+      .login-card {
+        padding: var(--space-xl) var(--space-lg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="login-page">
+    <div class="login-card">
+      <!-- Header -->
+      <div class="login-header">
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:var(--space-md);">
+          <img src="assets/images/logos/logo-smkn1stg.png?v=5" style="width:44px;height:44px;object-fit:contain;" alt="Logo SMKN 1 STG">
+          <div style="width:1px;height:32px;background:var(--border);"></div>
+          <img src="assets/images/logos/logo-upgrisba.png?v=4" style="width:44px;height:44px;object-fit:contain;" alt="Logo UPGRISBA">
+        </div>
+        <h1 style="font-weight:900;font-size:var(--fs-xl);margin-bottom:2px;color:var(--text-primary);">E-Modul Interaktif SQL</h1>
+        <p style="font-size:var(--fs-xs);color:var(--text-secondary);margin:0;">SMK Negeri 1 Sintuk Toboh Gadang</p>
+      </div>
+
+      <!-- Tab Switcher: Masuk / Daftar -->
+      <div class="auth-tab-wrap" role="tablist">
+        <button type="button" class="auth-tab-btn active" id="tab-btn-login" role="tab" aria-selected="true">
+          <span>🔑</span> Masuk (Login)
+        </button>
+        <button type="button" class="auth-tab-btn" id="tab-btn-register" role="tab" aria-selected="false">
+          <span>📝</span> Daftar Siswa Baru
+        </button>
+      </div>
+
+      <!-- ================= 1. FORM LOGIN ================= -->
+      <div class="auth-form-panel active" id="panel-login">
+        <form class="login-form" id="login-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="email">Email Akun</label>
+            <input
+              class="form-input"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="nama@siswa.id atau nama@guru.id"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <div class="password-wrapper">
+              <input
+                class="form-input"
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Masukkan password akun"
+                autocomplete="current-password"
+                required
+              >
+              <button type="button" class="password-toggle" id="toggle-password" aria-label="Tampilkan password">
+                👁
+              </button>
+            </div>
+          </div>
+
+          <!-- Error message area -->
+          <div class="error-message" id="login-error" role="alert"></div>
+
+          <!-- Submit -->
+          <button class="btn btn-primary btn-lg btn-submit-auth" type="submit" id="btn-login">
+            Masuk ke Modul Pembelajaran
+          </button>
+        </form>
+
+        <p class="auth-switch-prompt">
+          Belum punya akun? <a id="link-to-register">Daftar Akun Siswa di sini</a>
+        </p>
+      </div>
+
+      <!-- ================= 2. FORM REGISTRASI SISWA ================= -->
+      <div class="auth-form-panel" id="panel-register">
+        <form class="login-form" id="register-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="reg-nama">Nama Lengkap Siswa <span style="color:var(--error);">*</span></label>
+            <input
+              class="form-input"
+              type="text"
+              id="reg-nama"
+              name="nama"
+              placeholder="Contoh: Okfiqha Risdawati"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-kelas">Pilihan Kelas RPL <span style="color:var(--error);">*</span></label>
+            <select class="form-input" id="reg-kelas" name="kelas" required style="font-weight:600;">
+              <option value="" disabled selected>-- Pilih Kelas Anda --</option>
+              <option value="XI RPL 1">XI RPL 1 (Rekayasa Perangkat Lunak 1)</option>
+              <option value="XI RPL 2">XI RPL 2 (Rekayasa Perangkat Lunak 2)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Alamat Email Siswa <span style="color:var(--error);">*</span></label>
+            <input
+              class="form-input"
+              type="email"
+              id="reg-email"
+              name="email"
+              placeholder="contoh: okfiqha@gmail.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-password">Password Baru <span style="color:var(--error);">*</span></label>
+            <div class="password-wrapper">
+              <input
+                class="form-input"
+                type="password"
+                id="reg-password"
+                name="password"
+                placeholder="Minimal 6 karakter"
+                autocomplete="new-password"
+                required
+              >
+              <button type="button" class="password-toggle" id="toggle-reg-password" aria-label="Tampilkan password">
+                👁
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-confirm-password">Konfirmasi Password <span style="color:var(--error);">*</span></label>
+            <input
+              class="form-input"
+              type="password"
+              id="reg-confirm-password"
+              placeholder="Ulangi password di atas"
+              autocomplete="new-password"
+              required
+            >
+          </div>
+
+          <!-- Error message area -->
+          <div class="error-message" id="register-error" role="alert"></div>
+
+          <!-- Submit -->
+          <button class="btn btn-primary btn-lg btn-submit-auth" type="submit" id="btn-register">
+            🚀 Buat Akun & Mulai Belajar
+          </button>
+        </form>
+
+        <p class="auth-switch-prompt">
+          Sudah punya akun? <a id="link-to-login">Masuk ke akun Anda di sini</a>
+        </p>
+      </div>
+
+      <p class="login-footer">
+        E-Modul Interaktif SQL &mdash; SMK Negeri 1 Sintuk Toboh Gadang
+      </p>
+    </div>
+  </main>
+
+  <!-- Password toggles -->
+  <script>
+    function setupPasswordToggle(toggleId, inputId) {
+      const toggle = document.getElementById(toggleId);
+      const input = document.getElementById(inputId);
+      if (toggle && input) {
+        toggle.addEventListener('click', function() {
+          const isPassword = input.type === 'password';
+          input.type = isPassword ? 'text' : 'password';
+          this.textContent = isPassword ? '🙈' : '👁';
+        });
+      }
+    }
+    setupPasswordToggle('toggle-password', 'password');
+    setupPasswordToggle('toggle-reg-password', 'reg-password');
+  </script>
+
+  <!-- Firebase Auth login & register logic -->
+  <script type="module" src="assets/js/auth.js?v=6"></script>
+
+</body>
+</html>

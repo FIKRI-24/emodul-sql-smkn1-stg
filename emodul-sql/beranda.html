@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beranda Siswa — E-Modul Interaktif SQL</title>
+  <meta name="description" content="Dashboard belajar siswa E-Modul Interaktif SQL SMK Negeri 1 Sintuk Toboh Gadang">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.1">
+  <style>
+    .page-wrapper {
+      min-height: 100vh;
+      background: var(--bg-body);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-2xl);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-light);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      font-weight: 800;
+      font-size: var(--fs-md);
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .nav-logos-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-inst-logo {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 6px 14px;
+      background: hsl(220, 20%, 95%);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-full);
+      font-size: var(--fs-sm);
+    }
+
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--fs-xs);
+      font-weight: 700;
+    }
+
+    /* Main Container */
+    .beranda-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--space-2xl) var(--space-xl);
+      width: 100%;
+      flex: 1;
+    }
+
+    /* 3D Icon styling */
+    .stat-3d-icon {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.1));
+    }
+
+    .roadmap-3d-icon {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.08));
+    }
+
+    .tool-3d-icon {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+      margin-bottom: var(--space-sm);
+      filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.08));
+      transition: transform var(--transition-fast);
+    }
+
+    .tool-card:hover .tool-3d-icon {
+      transform: scale(1.12);
+    }
+
+    .btn-3d-icon,
+    .btn img {
+      width: 20px !important;
+      height: 20px !important;
+      max-width: 20px !important;
+      max-height: 20px !important;
+      object-fit: contain !important;
+      vertical-align: middle !important;
+      display: inline-block !important;
+      flex-shrink: 0 !important;
+      margin-right: 6px;
+    }
+
+    .badge-3d-icon,
+    .badge img {
+      width: 16px !important;
+      height: 16px !important;
+      max-width: 16px !important;
+      max-height: 16px !important;
+      object-fit: contain !important;
+      vertical-align: middle !important;
+      display: inline-block !important;
+      flex-shrink: 0 !important;
+      margin-right: 4px;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #ffffff 0%, hsl(220, 35%, 97.5%) 60%, hsl(210, 80%, 96%) 100%);
+      color: var(--text-primary);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      margin-bottom: var(--space-2xl);
+      box-shadow: 0 10px 30px -6px rgba(37, 99, 235, 0.07);
+      border: 1px solid var(--border-light);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::before {
+      content: "";
+      position: absolute;
+      top: -40%;
+      right: -10%;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      background: radial-gradient(circle, hsla(231, 75%, 64%, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-md);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      background: var(--primary-subtle);
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      color: var(--primary-dark);
+      border: none;
+    }
+
+    .hero-title {
+      font-size: var(--fs-2xl);
+      font-weight: 900;
+      color: var(--text-primary);
+      margin-bottom: var(--space-xs);
+      letter-spacing: -0.5px;
+    }
+
+    .hero-desc {
+      font-size: var(--fs-base);
+      color: var(--text-secondary);
+      max-width: 640px;
+      line-height: 1.65;
+      margin-bottom: var(--space-xl);
+    }
+
+    .hero-progress-box {
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg) var(--space-xl);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-lg);
+      flex-wrap: wrap;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    }
+
+    .progress-info {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    .progress-bar-wrap {
+      height: 10px;
+      background: hsl(220, 20%, 92%);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: var(--radius-full);
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: var(--space-lg) var(--space-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      transition: transform var(--transition-base), box-shadow var(--transition-base);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-meta h4 {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .stat-val {
+      font-size: var(--fs-lg);
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    /* Section Headers */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-lg);
+    }
+
+    .section-head h2 {
+      font-size: var(--fs-xl);
+      font-weight: 800;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .section-head p {
+      color: var(--text-secondary);
+      font-size: var(--fs-sm);
+      margin: 2px 0 0 0;
+    }
+
+    /* Roadmap Pathway */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .roadmap-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
+      color: inherit;
+      transition: all var(--transition-base);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .roadmap-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px);
+    }
+
+    .roadmap-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-md);
+    }
+
+    .roadmap-card-title {
+      font-size: var(--fs-lg);
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .roadmap-card-desc {
+      color: var(--text-secondary);
+      font-size: var(--fs-sm);
+      line-height: 1.5;
+      margin-bottom: var(--space-lg);
+    }
+
+    .roadmap-card-action {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--border-light);
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Menu Grid for Secondary Tools */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .tool-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl) var(--space-md);
+      text-align: center;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: all var(--transition-base);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-light);
+      background: var(--primary-subtle);
+    }
+
+    .tool-card-title {
+      font-weight: 800;
+      font-size: var(--fs-sm);
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .tool-card-desc {
+      font-size: var(--fs-xs);
+      color: var(--text-secondary);
+    }
+
+    /* Footer */
+    .footer {
+      background: #ffffff;
+      border-top: 1px solid var(--border-light);
+      padding: var(--space-lg) var(--space-xl);
+      text-align: center;
+      font-size: var(--fs-xs);
+      color: var(--text-secondary);
+    }
+
+    /* Loading Screen */
+    .loading-screen {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .loading-spinner {
+      width: 44px;
+      height: 44px;
+      border: 3.5px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .stats-row { grid-template-columns: 1fr; }
+      .roadmap-grid { grid-template-columns: 1fr; }
+      .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .navbar { padding: var(--space-sm) var(--space-md); }
+      .beranda-container { padding: var(--space-lg) var(--space-md); }
+      .hero-banner { padding: var(--space-lg); }
+      .tools-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-spinner"></div>
+      <p style="color:var(--text-secondary);font-weight:500;">Memuat Dashboard Pembelajaran…</p>
+    </div>
+
+    <!-- App Content -->
+    <div id="app-content" style="display: none;">
+
+      <!-- Navbar -->
+      <nav class="navbar">
+        <a href="beranda.html" class="navbar-brand">
+          <div class="nav-logos-wrap">
+            <img src="assets/images/logos/logo-smkn1stg.png?v=5" class="nav-inst-logo" alt="Logo SMKN 1 STG">
+            <img src="assets/images/logos/logo-upgrisba.png?v=4" class="nav-inst-logo" alt="Logo UPGRISBA">
+          </div>
+          <div>
+            <div style="line-height:1.1;font-weight:900;">E-Modul SQL</div>
+            <div style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px;">SMKN 1 SINTUK TOBOH GADANG</div>
+          </div>
+        </a>
+
+        <div class="navbar-right">
+          <div class="user-pill">
+            <div class="user-avatar" id="avatar-initial">S</div>
+            <div>
+              <strong id="nav-username" style="color:var(--text-primary);">Siswa</strong>
+              <span class="badge badge-primary" id="nav-role-badge" style="margin-left:4px;font-size:10px;">Siswa</span>
+            </div>
+          </div>
+
+          <a href="guru.html" class="btn btn-secondary" id="nav-guru-btn" style="display:none;padding:6px 14px;font-size:var(--fs-xs);border-color:var(--warning);color:hsl(35,90%,38%);font-weight:700;">
+            👑 Dashboard Guru
+          </a>
+
+          <button class="btn btn-ghost" id="btn-logout" title="Keluar dari akun">
+            Keluar
+          </button>
+        </div>
+      </nav>
+
+      <!-- Main Container -->
+      <main class="beranda-container">
+
+        <!-- Guru Banner (jika login sebagai guru) -->
+        <div id="guru-banner" style="display:none;margin-bottom:var(--space-xl);">
+          <div class="card" style="border:2px solid var(--warning);background:linear-gradient(135deg, hsla(38,92%,55%,0.08), hsla(30,90%,50%,0.03));display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-md);">
+            <div>
+              <span class="badge badge-warning" style="margin-bottom:6px;">Mode Guru / Peneliti Aktif</span>
+              <h3 style="margin-bottom:4px;">Dashboard Pengelolaan & Rekap Penelitian Guru</h3>
+              <p style="color:var(--text-secondary);font-size:var(--fs-sm);margin:0;">Kelola akun siswa, buat akun baru, dan pantau rekap hasil kuis & progres siswa.</p>
+            </div>
+            <a href="guru.html" class="btn btn-primary" style="background:linear-gradient(135deg,var(--warning),hsl(30,90%,45%));">
+              Buka Dashboard Guru →
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Banner Siswa -->
+        <section class="hero-banner">
+          <div class="hero-content">
+            <div class="hero-badges">
+              <span class="hero-badge">
+                <img src="assets/images/3d-icons/database.png" class="badge-3d-icon" alt="">
+                E-Modul Interaktif SQL
+              </span>
+              <span class="hero-badge" id="hero-kelas-badge">
+                SMK Negeri 1 Sintuk Toboh Gadang
+              </span>
+            </div>
+            <h1 class="hero-title">Halo, <span id="greeting-name">Siswa</span>!</h1>
+            <p class="hero-desc">Selamat datang di media pembelajaran interaktif SQL. Pelajari materi DDL, DML, dan DCL secara terstruktur dengan simulasi praktikum langsung di browser.</p>
+
+            <div class="hero-progress-box">
+              <div class="progress-info">
+                <div class="progress-labels">
+                  <span>Progres Capaian Pembelajaran</span>
+                  <span id="progress-percent-text">0% Selesai</span>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div class="progress-bar-fill" id="hero-progress-bar" style="width: 0%;"></div>
+                </div>
+              </div>
+              <a href="panduan.html" class="btn btn-success btn-lg" id="btn-resume-learning">
+                <img src="assets/images/3d-icons/rocket.png" class="btn-3d-icon" alt="">
+                Mulai Belajar
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Stats Row -->
+        <section class="stats-row">
+          <div class="stat-card">
+            <img src="assets/images/3d-icons/book.png" class="stat-3d-icon" alt="Materi">
+            <div class="stat-meta">
+              <h4>Materi & Kegiatan</h4>
+              <div class="stat-val" id="stat-kegiatan-text">0 / 3 Selesai</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <img src="assets/images/3d-icons/laptop.png" class="stat-3d-icon" alt="Playground">
+            <div class="stat-meta">
+              <h4>Editor Playground</h4>
+              <div class="stat-val">Bebas Akses</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <img src="assets/images/3d-icons/trophy.png" class="stat-3d-icon" alt="Evaluasi">
+            <div class="stat-meta">
+              <h4>Status Evaluasi Akhir</h4>
+              <div class="stat-val" id="stat-evaluasi-text">Belum Diambil</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Peta Alur Pembelajaran (Roadmap) -->
+        <div class="section-head">
+          <div>
+            <h2>Peta Alur Pembelajaran</h2>
+            <p>Selesaikan tahapan secara berurutan (Syarat KKM Latihan ≥ 80):</p>
+          </div>
+        </div>
+
+        <section class="roadmap-grid">
+
+          <!-- Kegiatan 1 -->
+          <a href="kegiatan/kegiatan-1.html" class="roadmap-card" id="roadmap-keg1">
+            <div class="roadmap-card-top">
+              <div class="roadmap-card-header">
+                <img src="assets/images/3d-icons/database.png" class="roadmap-3d-icon" alt="">
+                <span class="badge badge-neutral" id="badge-keg1">Tahap 1</span>
+              </div>
+              <div class="roadmap-card-title">Kegiatan 1: Pengenalan SQL & DDL</div>
+              <div class="roadmap-card-desc">
+                Mempelajari sejarah SQL, DBMS XAMPP & MySQL, serta sintaks DDL (<code>CREATE</code>, <code>ALTER</code>, <code>RENAME</code>, <code>DROP</code>).
+              </div>
+            </div>
+            <div class="roadmap-card-action">
+              <span>Buka Pembelajaran</span>
+              <span>→</span>
+            </div>
+          </a>
+
+          <!-- Kegiatan 2 -->
+          <a href="kegiatan/kegiatan-2.html" class="roadmap-card is-locked" id="roadmap-keg2">
+            <div class="roadmap-card-top">
+              <div class="roadmap-card-header">
+                <img src="assets/images/3d-icons/laptop.png" class="roadmap-3d-icon" alt="">
+                <span class="badge badge-neutral" id="badge-keg2">🔒 Terkunci</span>
+              </div>
+              <div class="roadmap-card-title">Kegiatan 2: Data Manipulation (DML)</div>
+              <div class="roadmap-card-desc">
+                Mengolah tabel dengan <code>INSERT INTO</code>, menampilkan data dengan <code>SELECT</code> & <code>LIKE</code>, serta <code>UPDATE</code> & <code>DELETE</code>.
+              </div>
+            </div>
+            <div class="roadmap-card-action">
+              <span>Buka Pembelajaran</span>
+              <span>→</span>
+            </div>
+          </a>
+
+          <!-- Kegiatan 3 -->
+          <a href="kegiatan/kegiatan-3.html" class="roadmap-card is-locked" id="roadmap-keg3">
+            <div class="roadmap-card-top">
+              <div class="roadmap-card-header">
+                <img src="assets/images/3d-icons/key.png" class="roadmap-3d-icon" alt="">
+                <span class="badge badge-neutral" id="badge-keg3">🔒 Terkunci</span>
+              </div>
+              <div class="roadmap-card-title">Kegiatan 3: Data Control Language (DCL)</div>
+              <div class="roadmap-card-desc">
+                Menerapkan keamanan database, membuat akun pengguna baru (<code>CREATE USER</code>), dan mengelola hak akses (<code>GRANT</code> & <code>REVOKE</code>).
+              </div>
+            </div>
+            <div class="roadmap-card-action">
+              <span>Buka Pembelajaran</span>
+              <span>→</span>
+            </div>
+          </a>
+
+          <!-- Evaluasi Akhir -->
+          <a href="evaluasi.html" class="roadmap-card is-locked" id="roadmap-eval">
+            <div class="roadmap-card-top">
+              <div class="roadmap-card-header">
+                <img src="assets/images/3d-icons/clipboard.png" class="roadmap-3d-icon" alt="">
+                <span class="badge badge-neutral" id="badge-eval">🔒 Terkunci</span>
+              </div>
+              <div class="roadmap-card-title">Evaluasi Akhir Pemahaman SQL</div>
+              <div class="roadmap-card-desc">
+                Kuis komprehensif 10 butir soal pilihan ganda untuk menguji penguasaan seluruh materi pembelajaran SQL.
+              </div>
+            </div>
+            <div class="roadmap-card-action">
+              <span id="eval-action-text">🔒 Selesaikan Kegiatan 1-3 (≥ 80)</span>
+              <span>→</span>
+            </div>
+          </a>
+
+        </section>
+
+        <!-- Tools & Informasi Tambahan -->
+        <div class="section-head">
+          <div>
+            <h2>Menu Alat & Informasi</h2>
+            <p>Fasilitas pendukung belajar dan informasi modul:</p>
+          </div>
+        </div>
+
+        <section class="tools-grid">
+
+          <a href="editor-sql.html" class="tool-card" id="card-tool-editor">
+            <img src="assets/images/3d-icons/laptop.png" class="tool-3d-icon" alt="">
+            <div class="tool-card-title">Playground SQL</div>
+            <div class="tool-card-desc">Simulasi tulis & jalankan query</div>
+            <span class="badge badge-success" id="badge-tool-editor" style="margin-top:6px; font-size:10px; font-weight:700;">🟢 Siap Praktik Bebas</span>
+          </a>
+
+          <a href="panduan.html" class="tool-card" id="card-tool-panduan">
+            <img src="assets/images/3d-icons/book.png" class="tool-3d-icon" alt="">
+            <div class="tool-card-title">Panduan Modul</div>
+            <div class="tool-card-desc">Petunjuk cara penggunaan</div>
+            <span class="badge badge-neutral" id="badge-tool-panduan" style="margin-top:6px; font-size:10px; font-weight:700;">Memeriksa...</span>
+          </a>
+
+          <a href="cp-atp.html" class="tool-card" id="card-tool-cpatp">
+            <img src="assets/images/3d-icons/target.png" class="tool-3d-icon" alt="">
+            <div class="tool-card-title">CP & ATP</div>
+            <div class="tool-card-desc">Capaian & tujuan belajar</div>
+            <span class="badge badge-neutral" id="badge-tool-cpatp" style="margin-top:6px; font-size:10px; font-weight:700;">Memeriksa...</span>
+          </a>
+
+          <a href="profil-pengembang.html" class="tool-card" id="card-tool-profil">
+            <img src="assets/images/3d-icons/bulb.png" class="tool-3d-icon" alt="">
+            <div class="tool-card-title">Profil Pengembang</div>
+            <div class="tool-card-desc">Info penyusun modul</div>
+            <span class="badge badge-info" style="margin-top:6px; font-size:10px; font-weight:700;">Info Pengembang</span>
+          </a>
+
+        </section>
+
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>© 2026 E-Modul Interaktif SQL • SMK Negeri 1 Sintuk Toboh Gadang & Universitas PGRI Sumatera Barat</p>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- Beranda Logic -->
+  <script type="module" src="assets/js/beranda.js?v=5"></script>
+
+</body>
+</html>

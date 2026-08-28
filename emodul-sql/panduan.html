@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panduan Penggunaan — E-Modul Interaktif SQL</title>
+  <meta name="description" content="Panduan cara menggunakan E-Modul Interaktif SQL — SMK Negeri 1 Sintuk Toboh Gadang">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.1">
+  <style>
+    .page-wrapper {
+      min-height: 100vh;
+      background: var(--bg-body);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-2xl);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-light);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-weight: 800;
+      font-size: var(--fs-md);
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .navbar-brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--fs-xs);
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .content-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: var(--space-2xl) var(--space-xl);
+      width: 100%;
+      flex: 1;
+    }
+
+    .page-header {
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      margin-bottom: var(--space-xl);
+      box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .guide-section {
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      margin-bottom: var(--space-xl);
+      box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.05);
+      transition: all var(--transition-base);
+    }
+
+    .guide-section:hover {
+      box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin: var(--space-lg) 0 0 0;
+      counter-reset: guide-step;
+    }
+
+    .step-list li {
+      counter-increment: guide-step;
+      position: relative;
+      padding-left: 60px;
+      margin-bottom: var(--space-xl);
+    }
+
+    .step-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-list li::before {
+      content: counter(guide-step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff;
+      font-weight: 800;
+      font-size: var(--fs-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .step-list strong {
+      display: block;
+      font-size: var(--fs-md);
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .step-list p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0;
+      font-size: var(--fs-sm);
+    }
+
+    .step-badge {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      background: var(--primary-subtle);
+      color: var(--primary-dark);
+    }
+
+    .action-bar-complete {
+      background: #ffffff;
+      border: 2px solid var(--primary-light);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      text-align: center;
+      box-shadow: 0 8px 30px -4px rgba(37, 99, 235, 0.12);
+      margin-top: var(--space-2xl);
+    }
+
+    .btn-3d-icon,
+    .btn img {
+      width: 22px !important;
+      height: 22px !important;
+      max-width: 22px !important;
+      max-height: 22px !important;
+      object-fit: contain !important;
+      vertical-align: middle !important;
+      display: inline-block !important;
+      flex-shrink: 0 !important;
+    }
+
+    @media (max-width: 768px) {
+      .navbar { padding: var(--space-sm) var(--space-md); }
+      .content-container { padding: var(--space-md); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <a href="beranda.html" class="navbar-brand">
+        <div class="navbar-brand-icon">SQL</div>
+        <div>
+          <div style="line-height:1.1;">E-Modul SQL</div>
+          <div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px;">SMKN 1 SINTUK TOBOH GADANG</div>
+        </div>
+      </a>
+      <a href="beranda.html" class="btn btn-secondary btn-sm">← Kembali ke Beranda</a>
+    </nav>
+
+    <main class="content-container">
+
+      <!-- Header -->
+      <div class="page-header">
+        <span class="badge badge-primary" style="margin-bottom:8px;">
+          <img src="assets/images/3d-icons/book.png" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;" alt="">
+          Petunjuk Penggunaan Modul
+        </span>
+        <h1 style="font-size:var(--fs-2xl);font-weight:900;margin-bottom:6px;color:var(--text-primary);">Panduan Penggunaan E-Modul</h1>
+        <p style="color:var(--text-secondary);margin:0;line-height:1.6;">
+          Selamat datang di E-Modul Interaktif SQL. Pahami aturan sistem pembelajaran bertahap (<em>sequential learning</em>) dan mekanisme pembukaan materi di bawah ini.
+        </p>
+      </div>
+
+      <!-- Aturan Sistem Penguncian & Alur Pembelajaran -->
+      <section class="guide-section">
+        <h2 style="font-size:var(--fs-xl);font-weight:800;color:var(--text-primary);display:flex;align-items:center;gap:10px;margin-bottom:var(--space-md);">
+          <img src="assets/images/3d-icons/target.png" style="width:32px;height:32px;object-fit:contain;" alt="">
+          Alur & Aturan Pembelajaran Berurutan
+        </h2>
+        <p style="color:var(--text-secondary);line-height:1.6;">
+          E-Modul ini menerapkan alur pembelajaran terstruktur (<em>mastery learning</em>). Siswa tidak dapat langsung melompat ke materi berikutnya tanpa menyelesaikan tahapan prasyarat:
+        </p>
+
+        <ol class="step-list">
+          <li>
+            <strong>1. Membaca Panduan Modul (Tahap Ini)</strong>
+            <p>Pahami cara kerja e-modul. Klik tombol konfirmasi di bawah untuk membuka menu Capaian & Tujuan Pembelajaran (CP & ATP).</p>
+            <span class="step-badge">Bebas Diakses</span>
+          </li>
+          <li>
+            <strong>2. Mempelajari Capaian & Alur Tujuan Pembelajaran (CP & ATP)</strong>
+            <p>Pahami target kompetensi yang harus dikuasai pada mata pelajaran Basis Data. Setelah selesai membaca CP/ATP, Kegiatan Belajar 1 akan otomatis terbuka.</p>
+            <span class="step-badge">Terbuka Setelah Membaca Panduan</span>
+          </li>
+          <li>
+            <strong>3. Kegiatan Belajar 1 (Pengenalan SQL & DDL) — Syarat Nilai Latihan: Minimal 80 (KKM ≥ 80)</strong>
+            <p>Pelajari uraian materi, tonton video, dan kerjakan latihan soal. Nilai latihan harus memperoleh <strong>minimal 80 (KKM ≥ 80)</strong> agar Kegiatan Belajar 2 terbuka.</p>
+            <span class="step-badge" style="background:var(--warning-subtle);color:hsl(35,90%,38%);">Wajib Nilai Latihan ≥ 80</span>
+          </li>
+          <li>
+            <strong>4. Kegiatan Belajar 2 (Data Manipulation / DML) — Syarat Nilai Latihan: Minimal 80 (KKM ≥ 80)</strong>
+            <p>Pelajari perintah <code>INSERT</code>, <code>SELECT</code>, <code>UPDATE</code>, <code>DELETE</code>. Raih nilai latihan minimal 80 untuk membuka Kegiatan Belajar 3.</p>
+            <span class="step-badge" style="background:var(--warning-subtle);color:hsl(35,90%,38%);">Wajib Nilai Latihan ≥ 80</span>
+          </li>
+          <li>
+            <strong>5. Kegiatan Belajar 3 (Data Control / DCL) & Praktik Mandiri</strong>
+            <p>Pelajari manajemen hak akses pengguna (<code>GRANT</code> & <code>REVOKE</code>). Tuntaskan latihan dengan nilai minimal 80 (KKM ≥ 80) untuk membuka Evaluasi Akhir.</p>
+            <span class="step-badge" style="background:var(--warning-subtle);color:hsl(35,90%,38%);">Wajib Nilai Latihan ≥ 80</span>
+          </li>
+          <li>
+            <strong>6. Evaluasi Akhir Pemahaman SQL</strong>
+            <p>Ujian komprehensif 10 butir soal untuk mengukur keseluruhan pemahaman konsep dan perintah SQL Anda.</p>
+            <span class="step-badge">Tahap Akhir Modul</span>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Fitur Sandbox Editor SQL -->
+      <section class="guide-section">
+        <h2 style="font-size:var(--fs-xl);font-weight:800;color:var(--text-primary);display:flex;align-items:center;gap:10px;margin-bottom:var(--space-md);">
+          <img src="assets/images/3d-icons/laptop.png" style="width:32px;height:32px;object-fit:contain;" alt="">
+          Playground Editor SQL (Bebas Diakses Kapan Saja)
+        </h2>
+        <p style="color:var(--text-secondary);line-height:1.6;margin-bottom:var(--space-md);">
+          Fitur <strong>Editor SQL</strong> tidak dikunci dan dapat Anda gunakan kapan saja untuk mencoba menulis perintah SQL secara mandiri dengan database virtual yang berjalan di browser.
+        </p>
+
+        <div style="background:hsl(220,25%,97%);padding:var(--space-lg);border-radius:var(--radius-lg);border:1px solid var(--border);">
+          <h4 style="margin:0 0 6px 0;color:var(--primary);font-size:var(--fs-sm);">💡 Tips Menjalankan Query di Editor SQL:</h4>
+          <ul style="margin:0;padding-left:20px;font-size:var(--fs-xs);color:var(--text-secondary);line-height:1.6;">
+            <li>Gunakan tombol <kbd style="background:#e2e8f0;padding:2px 6px;border-radius:4px;font-weight:700;">Ctrl + Enter</kbd> untuk mengeksekusi perintah SQL dengan cepat.</li>
+            <li>Tabel bawaan yang siap dicoba: <code>murid</code> (nisn, nama, alamat, jenis_kel, kelas) dan <code>mapel</code>.</li>
+            <li>Gunakan tombol <strong>"Reset Database"</strong> jika ingin mengembalikan struktur tabel ke kondisi awal.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Action Box: Konfirmasi Selesai Membaca Panduan -->
+      <div class="action-bar-complete" id="panduan-action-box">
+        <h3 style="font-size:var(--fs-lg);font-weight:800;color:var(--text-primary);margin-bottom:6px;">
+          Siap Memulai Pembelajaran?
+        </h3>
+        <p style="color:var(--text-secondary);font-size:var(--fs-sm);margin:0 auto var(--space-lg) auto;max-width:540px;">
+          Klik tombol di bawah untuk mengonfirmasi bahwa Anda telah memahami panduan. Tahap <strong>CP & ATP</strong> akan langsung terbuka.
+        </p>
+        <button class="btn btn-primary btn-lg" id="btn-selesai-panduan">
+          <img src="assets/images/3d-icons/check.png" class="btn-3d-icon" style="width:22px;height:22px;max-width:22px;max-height:22px;object-fit:contain;vertical-align:middle;display:inline-block;" alt="">
+          <span>Saya Telah Memahami Panduan — Buka CP & ATP →</span>
+        </button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Auth Guard & Panduan State Logic -->
+  <script type="module">
+    import { authReady } from "./assets/js/auth-guard.js";
+    import { db, doc, getDoc, setDoc } from "./assets/js/firebase-config.js";
+
+    authReady.then(async (userData) => {
+      const btnSelesai = document.getElementById("btn-selesai-panduan");
+
+      // Cek apakah sudah pernah menyelesaikan panduan
+      try {
+        const ref = doc(db, "progres", userData.uid);
+        const snap = await getDoc(ref);
+        if (snap.exists() && snap.data().panduanSelesai) {
+          btnSelesai.innerHTML = '<img src="assets/images/3d-icons/check.png" class="btn-3d-icon" style="width:22px;height:22px;max-width:22px;max-height:22px;object-fit:contain;vertical-align:middle;display:inline-block;" alt=""> <span>Panduan Sudah Dipahami — Buka CP & ATP →</span>';
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+
+      btnSelesai.addEventListener("click", async () => {
+        btnSelesai.disabled = true;
+        btnSelesai.textContent = "Menyimpan progres…";
+
+        try {
+          await setDoc(doc(db, "progres", userData.uid), {
+            panduanSelesai: true,
+            updatedAt: new Date()
+          }, { merge: true });
+
+          window.location.href = "cp-atp.html";
+        } catch (err) {
+          console.error("Gagal simpan progres panduan:", err);
+          window.location.href = "cp-atp.html";
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

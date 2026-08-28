@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluasi Akhir — E-Modul Interaktif SQL</title>
+  <meta name="description" content="Kuis evaluasi akhir pemahaman materi SQL — SMK Negeri 1 Sintuk Toboh Gadang">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.1">
+  <style>
+    .page-wrapper {
+      min-height: 100vh;
+      background: var(--bg-body);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-2xl);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-weight: 800;
+      font-size: var(--fs-md);
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .navbar-brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--fs-xs);
+      font-weight: 800;
+      color: #fff;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .content-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: var(--space-2xl) var(--space-xl);
+      width: 100%;
+      flex: 1;
+    }
+
+    /* 3D Icon styling */
+    .eval-3d-hero {
+      width: 84px;
+      height: 84px;
+      object-fit: contain;
+      margin-bottom: var(--space-md);
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
+    }
+
+    .btn-3d-icon,
+    .btn img {
+      width: 20px !important;
+      height: 20px !important;
+      max-width: 20px !important;
+      max-height: 20px !important;
+      object-fit: contain !important;
+      vertical-align: middle !important;
+      display: inline-block !important;
+      flex-shrink: 0 !important;
+      margin-right: 6px;
+    }
+
+    .badge-3d-icon,
+    .badge img {
+      width: 16px !important;
+      height: 16px !important;
+      max-width: 16px !important;
+      max-height: 16px !important;
+      object-fit: contain !important;
+      vertical-align: middle !important;
+      display: inline-block !important;
+      flex-shrink: 0 !important;
+      margin-right: 4px;
+    }
+
+    /* Loading */
+    .loading-screen {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .loading-spinner {
+      width: 44px;
+      height: 44px;
+      border: 3.5px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== Intro Screen ===== */
+    .eval-intro {
+      text-align: center;
+      padding: var(--space-2xl) var(--space-xl);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .eval-intro h1 {
+      font-size: var(--fs-2xl);
+      font-weight: 800;
+      margin-bottom: var(--space-xs);
+      color: var(--text-primary);
+    }
+
+    .eval-intro p {
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto var(--space-xl) auto;
+      font-size: var(--fs-base);
+    }
+
+    .eval-rules {
+      background: hsl(220, 20%, 97%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      text-align: left;
+      margin: 0 auto var(--space-2xl) auto;
+      max-width: 540px;
+    }
+
+    .eval-rules h3 {
+      font-size: var(--fs-base);
+      font-weight: 800;
+      margin-bottom: var(--space-md);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .eval-rules li {
+      list-style: none;
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: var(--space-sm);
+      color: var(--text-primary);
+      font-size: var(--fs-sm);
+      line-height: 1.6;
+    }
+
+    .eval-rules li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--success);
+      font-weight: 800;
+    }
+
+    /* ===== Quiz Form ===== */
+    .eval-form {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .eval-form.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .eval-header {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-xl);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+
+    .eval-soal {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-xl);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-base);
+    }
+
+    .eval-soal:hover {
+      border-color: hsl(220, 20%, 82%);
+    }
+
+    .eval-soal.unanswered-highlight {
+      border-color: var(--error);
+      box-shadow: 0 0 0 4px var(--error-subtle);
+    }
+
+    .eval-soal-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-md);
+    }
+
+    .eval-soal-number {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff;
+      border-radius: var(--radius-full);
+      font-weight: 800;
+      font-size: var(--fs-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .eval-soal-text {
+      font-weight: 600;
+      font-size: var(--fs-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      margin-bottom: var(--space-lg);
+    }
+
+    .eval-opsi-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .eval-opsi {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md) var(--space-lg);
+      background: hsl(220, 20%, 98%);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--fs-sm);
+      transition: all var(--transition-fast);
+    }
+
+    .eval-opsi:hover {
+      background: var(--primary-subtle);
+      border-color: var(--primary-light);
+    }
+
+    .eval-opsi.selected {
+      background: hsla(231, 68%, 52%, 0.08);
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+
+    .eval-opsi input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    .eval-opsi-letter {
+      font-weight: 800;
+      color: var(--primary);
+      min-width: 20px;
+    }
+
+    .eval-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--space-2xl);
+      padding-top: var(--space-xl);
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+
+    .eval-warning {
+      color: var(--error);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      display: none;
+    }
+
+    .eval-warning.visible {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    @media (max-width: 768px) {
+      .navbar { padding: var(--space-sm) var(--space-md); }
+      .content-container { padding: var(--space-md); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <!-- Loading -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-spinner"></div>
+      <p style="color:var(--text-secondary);font-weight:500;">Memuat Lembar Evaluasi…</p>
+    </div>
+
+    <div id="app-content" style="display: none;">
+
+      <!-- Navbar -->
+      <nav class="navbar">
+        <a href="beranda.html" class="navbar-brand">
+          <div class="navbar-brand-icon">SQL</div>
+          <div>
+            <div style="line-height:1.1;">E-Modul SQL</div>
+            <div style="font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px;">SMKN 1 SINTUK TOBOH GADANG</div>
+          </div>
+        </a>
+        <a href="beranda.html" class="btn btn-secondary btn-sm">← Kembali ke Beranda</a>
+      </nav>
+
+      <main class="content-container">
+
+        <!-- Error Screen -->
+        <div id="eval-error" style="display: none; text-align: center; padding: 4rem 1rem;">
+          <div class="card" style="max-width:540px;margin:0 auto;padding:var(--space-2xl);">
+            <img src="assets/images/3d-icons/key.png" class="eval-3d-hero" alt="">
+            <h2 style="margin-bottom: var(--space-sm);">Kuis Belum Tersedia</h2>
+            <p style="color: var(--text-secondary); margin-bottom: var(--space-xl);">
+              Kuis evaluasi akhir belum diaktifkan atau belum tersedia. Silakan hubungi Guru Anda.
+            </p>
+            <a href="beranda.html" class="btn btn-primary">Kembali ke Beranda</a>
+          </div>
+        </div>
+
+        <!-- Locked Screen (Jika belum menyelesaikan Kegiatan 1, 2, 3) -->
+        <div id="eval-locked" style="display: none; text-align: center; padding: 2rem 1rem;">
+          <div class="card" style="max-width:580px; margin:0 auto; padding:var(--space-2xl); border-radius:var(--radius-xl); box-shadow:0 8px 32px rgba(0,0,0,0.06); background:#ffffff;">
+            <img src="assets/images/3d-icons/key.png" class="eval-3d-hero" alt="" style="width:90px; height:90px; margin-bottom:var(--space-md);">
+            <div style="margin-bottom:var(--space-sm);">
+              <span class="badge badge-warning" style="font-weight:800; font-size:var(--fs-xs);">🔒 AKSES TERKUNCI</span>
+            </div>
+            <h2 style="margin-bottom: var(--space-xs); font-weight:800; font-size:var(--fs-xl); color:var(--text-primary);">Selesaikan Kegiatan Belajar Dahulu</h2>
+            <p style="color: var(--text-secondary); margin-bottom: var(--space-xl); font-size:var(--fs-sm); line-height:1.6;">
+              Untuk dapat mengerjakan Kuis Evaluasi Akhir, Anda diwajibkan mempelajari dan menyelesaikan seluruh materi pada <strong>Kegiatan Belajar 1, 2, dan 3</strong>.
+            </p>
+
+            <!-- Checklist Progres -->
+            <div style="background:hsl(220, 20%, 97.5%); border-radius:var(--radius-lg); padding:var(--space-lg); text-align:left; margin-bottom:var(--space-xl); border:1px solid var(--border-light);">
+              <strong style="font-size:var(--fs-xs); text-transform:uppercase; color:var(--text-secondary); letter-spacing:0.5px; display:block; margin-bottom:var(--space-md);">Status Capaian Kegiatan Pembelajaran:</strong>
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-sm); font-weight:600; padding:6px 0; border-bottom:1px solid var(--border-light);">
+                  <span style="display:flex; align-items:center; gap:8px;">📚 Kegiatan 1: Data Definition (DDL)</span>
+                  <span class="badge" id="lock-badge-keg1">Memeriksa...</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-sm); font-weight:600; padding:6px 0; border-bottom:1px solid var(--border-light);">
+                  <span style="display:flex; align-items:center; gap:8px;">📋 Kegiatan 2: Data Manipulation (DML)</span>
+                  <span class="badge" id="lock-badge-keg2">Memeriksa...</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:var(--fs-sm); font-weight:600; padding:6px 0;">
+                  <span style="display:flex; align-items:center; gap:8px;">🔒 Kegiatan 3: Data Control (DCL)</span>
+                  <span class="badge" id="lock-badge-keg3">Memeriksa...</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:center; gap:var(--space-md); flex-wrap:wrap;">
+              <a href="kegiatan/kegiatan-1.html" id="btn-lock-resume-eval" class="btn btn-primary" style="font-weight:800;">
+                <img src="assets/images/3d-icons/rocket.png" class="btn-3d-icon" alt="">
+                Lanjut Selesaikan Belajar
+              </a>
+              <a href="beranda.html" class="btn btn-secondary" style="font-weight:700;">🏠 Kembali ke Beranda</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Intro Screen -->
+        <div class="eval-intro" id="eval-intro">
+          <img src="assets/images/3d-icons/trophy.png" class="eval-3d-hero" alt="Evaluasi Akhir">
+          <h1 id="eval-judul-text">Evaluasi Akhir — Penguasaan SQL</h1>
+          <p>
+            Uji pemahaman Anda terhadap materi <strong>DDL, DML, dan DCL</strong> yang telah dipelajari dalam 3 Kegiatan Belajar sebelumnya.
+          </p>
+
+          <div class="eval-rules">
+            <h3>
+              <img src="assets/images/3d-icons/clipboard.png" class="badge-3d-icon" alt="">
+              Petunjuk Pengerjaan
+            </h3>
+            <ul>
+              <li>Kuis terdiri dari <strong>10 butir soal pilihan ganda</strong>.</li>
+              <li>Pilih satu opsi jawaban yang paling tepat (A, B, C, atau D).</li>
+              <li>Nilai KKM standar penguasaan modul adalah <strong>75</strong>.</li>
+              <li>Hasil nilai dan pembahasan jawaban benar akan langsung ditampilkan setelah Anda menekan tombol <em>Submit</em>.</li>
+              <li>Nilai otomatis tersimpan di rekap nilai guru untuk keperluan evaluasi penelitian.</li>
+            </ul>
+          </div>
+
+          <button class="btn btn-primary btn-lg" id="btn-mulai-kuis">
+            <img src="assets/images/3d-icons/rocket.png" class="btn-3d-icon" alt="">
+            Mulai Kerjakan Evaluasi
+          </button>
+        </div>
+
+        <!-- Quiz Form -->
+        <div class="eval-form" id="eval-form">
+          <div class="eval-header">
+            <div>
+              <span class="badge badge-warning" style="font-weight:800;margin-bottom:4px;">
+                <img src="assets/images/3d-icons/clipboard.png" class="badge-3d-icon" alt="">
+                Lembar Ujian
+              </span>
+              <h2 style="font-size:var(--fs-lg);margin:0;font-weight:800;">Evaluasi Akhir SQL</h2>
+            </div>
+            <div class="eval-progress" id="eval-progress" style="font-weight:700;">
+              <strong>10</strong> Soal Pilihan Ganda
+            </div>
+          </div>
+
+          <!-- Soal-soal di-render secara dinamis -->
+          <div id="soal-container"></div>
+
+          <!-- Warning belum dijawab -->
+          <p class="eval-warning" id="eval-warning">
+            <img src="assets/images/3d-icons/warning.png" class="btn-3d-icon" alt="">
+            Masih ada soal yang belum Anda jawab. Silakan periksa kembali soal yang bergaris merah.
+          </p>
+
+          <!-- Action buttons -->
+          <div class="eval-actions">
+            <button class="btn btn-ghost" id="btn-batal-kuis">
+              ← Batal & Kembali ke Beranda
+            </button>
+            <button class="btn btn-primary btn-lg" id="btn-submit">
+              <img src="assets/images/3d-icons/check.png" class="btn-3d-icon" alt="">
+              Kirim & Selesaikan Ujian
+            </button>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Evaluasi Logic -->
+  <script type="module" src="assets/js/evaluasi.js?v=3"></script>
+
+</body>
+</html>

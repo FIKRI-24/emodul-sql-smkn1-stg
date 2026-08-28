@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup Akun Guru — E-Modul SQL</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .setup-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--bg-dark) 0%, hsl(231, 42%, 22%) 50%, hsl(231, 56%, 30%) 100%);
+      padding: var(--space-xl);
+    }
+    .setup-card {
+      width: 100%;
+      max-width: 450px;
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      padding: var(--space-3xl) var(--space-2xl);
+      box-shadow: var(--shadow-lg);
+    }
+    .setup-header {
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+    .setup-header h1 {
+      font-size: var(--fs-xl);
+      color: var(--text-primary);
+    }
+    .setup-header p {
+      color: var(--text-secondary);
+      font-size: var(--fs-sm);
+    }
+    .success-alert {
+      display: none;
+      padding: var(--space-md);
+      background: hsla(152, 60%, 42%, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-lg);
+      font-size: var(--fs-sm);
+      text-align: center;
+    }
+    .error-alert {
+      display: none;
+      padding: var(--space-md);
+      background: hsla(0, 72%, 56%, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-lg);
+      font-size: var(--fs-sm);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="setup-page">
+    <div class="setup-card">
+      <div class="setup-header">
+        <h1>Setup Profil Guru</h1>
+        <p>Gunakan halaman ini untuk mendaftarkan data profil Guru ke Firestore</p>
+      </div>
+
+      <div class="success-alert" id="success-msg"></div>
+      <div class="error-alert" id="error-msg"></div>
+
+      <form id="setup-form">
+        <div class="form-group">
+          <label class="form-label" for="email">Email Guru</label>
+          <input class="form-input" type="email" id="email" value="fika@gmail.com" readonly>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password Akun Guru</label>
+          <input class="form-input" type="password" id="password" placeholder="Masukkan password fika@gmail.com" required>
+        </div>
+
+        <button class="btn btn-primary" type="submit" id="btn-submit" style="width: 100%;">
+          🚀 Buat Profil Guru
+        </button>
+      </form>
+      
+      <div style="margin-top: 20px; text-align: center;">
+        <a href="login.html" class="btn btn-secondary" style="width: 100%; display: none;" id="btn-login-page">
+          Go to Login Page →
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { auth, db } from "./assets/js/firebase-config.js";
+
+    const form = document.getElementById("setup-form");
+    const successMsg = document.getElementById("success-msg");
+    const errorMsg = document.getElementById("error-msg");
+    const btnSubmit = document.getElementById("btn-submit");
+    const btnLoginPage = document.getElementById("btn-login-page");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      successMsg.style.display = "none";
+      errorMsg.style.display = "none";
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = "Memproses...";
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        // 1. Sign in
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const uid = userCredential.user.uid;
+
+        // 2. Write document to Firestore
+        await setDoc(doc(db, "users", uid), {
+          nama: "Fika",
+          kelas: "-",
+          role: "guru"
+        }, { merge: true });
+
+        successMsg.textContent = "✅ Sukses! Profil Guru untuk fika@gmail.com berhasil dibuat di Firestore Database.";
+        successMsg.style.display = "block";
+        form.style.display = "none";
+        btnLoginPage.style.display = "inline-flex";
+
+      } catch (err) {
+        console.error(err);
+        errorMsg.textContent = "❌ Gagal: " + err.message;
+        errorMsg.style.display = "block";
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = "🚀 Buat Profil Guru";
+      }
+    });
+  </script>
+
+</body>
+</html>

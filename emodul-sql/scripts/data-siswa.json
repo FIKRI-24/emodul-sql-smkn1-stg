@@ -1,0 +1,17 @@
+[
+  {
+    "nama": "Siswa Test 1",
+    "email": "siswa1@test.com",
+    "kelas": "XI RPL 1"
+  },
+  {
+    "nama": "Siswa Test 2",
+    "email": "siswa2@test.com",
+    "kelas": "XI RPL 1"
+  },
+  {
+    "nama": "Siswa Test 3",
+    "email": "siswa3@test.com",
+    "kelas": "XI RPL 2"
+  }
+]

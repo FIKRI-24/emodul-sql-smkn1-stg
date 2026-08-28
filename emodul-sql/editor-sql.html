@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor SQL Interaktif — E-Modul SQL</title>
+  <meta name="description" content="Simulasi praktik SQL interaktif langsung di browser — SMK Negeri 1 Sintuk Toboh Gadang">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/lib/sql/sql-wasm.wasm" as="fetch" type="application/wasm" crossorigin>
+  <link rel="stylesheet" href="assets/css/style.css?v=2.1">
+  <link rel="stylesheet" href="assets/css/editor-sql.css?v=60">
+  <style>
+/* ============================================
+   editor-sql.css — Two-Column Interactive SQL Workspace
+   E-Modul Interaktif SQL - SMKN 1 Sintuk Toboh Gadang
+   ============================================ */
+
+/* ===== Page Layout ===== */
+.editor-page {
+  height: 100vh;
+  max-height: 100vh;
+  background: hsl(220, 20%, 96%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-page .navbar { display: none !important; }
+
+/* ===== Header Topbar ===== */
+.sql-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid hsl(220, 15%, 88%);
+  flex-shrink: 0;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  z-index: 10;
+}
+
+.sql-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-back-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: hsl(220, 20%, 95%);
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border: 1px solid hsl(220, 15%, 88%);
+}
+
+.header-back-btn:hover {
+  background: hsl(220, 20%, 90%);
+  transform: translateX(-2px);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-brand-icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, hsl(231, 68%, 52%), hsl(231, 68%, 62%));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px hsla(231, 68%, 52%, 0.25);
+}
+
+.header-brand-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.header-brand-sub {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.sql-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.db-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: hsl(152, 50%, 95%);
+  font-size: 11px;
+  font-weight: 700;
+  color: hsl(152, 60%, 28%);
+  border: 1px solid hsl(152, 40%, 82%);
+}
+
+.db-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.db-status-dot.ready {
+  background: hsl(152, 60%, 42%) !important;
+  box-shadow: 0 0 8px hsla(152, 60%, 42%, 0.6);
+}
+
+.db-status-dot.loading {
+  background: hsl(38, 92%, 50%) !important;
+  animation: pulse-dot 1s ease infinite;
+}
+
+.db-status-dot.error {
+  background: hsl(0, 72%, 51%) !important;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.header-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid hsl(220, 15%, 85%);
+  background: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-family);
+}
+
+.header-btn:hover {
+  background: hsl(0, 72%, 96%);
+  border-color: hsl(0, 50%, 80%);
+  color: hsl(0, 72%, 51%);
+}
+
+/* ===== Context Banner ===== */
+.context-banner {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px;
+  background: linear-gradient(135deg, hsla(165, 80%, 38%, 0.1), hsla(165, 80%, 38%, 0.04));
+  border-bottom: 1px solid hsla(165, 80%, 38%, 0.15);
+  font-size: 12px;
+  color: var(--secondary-dark);
+}
+
+.context-banner.visible { display: flex; }
+.context-banner a { color: var(--primary); font-weight: 700; text-decoration: underline; }
+
+/* ===== Two-Column Workspace Layout ===== */
+.sql-workspace {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 480px 1fr;
+  gap: 12px;
+  padding: 12px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ===== Left Column (Soal Latihan SQL Full Height) ===== */
+.workspace-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Latihan Card */
+.latihan-card {
+  flex: 1;
+  background: #0d1117;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  border: 1px solid #21262d;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.latihan-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #161b22;
+  border-bottom: 1px solid #21262d;
+}
+
+.latihan-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.latihan-sql-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #f0c040 !important;
+  font-family: var(--font-family);
+}
+
+.latihan-card-body {
+  flex: 1;
+  padding: 14px 16px;
+  overflow-y: auto;
+  background: #0d1117;
+}
+
+.latihan-card-body::-webkit-scrollbar { width: 6px; }
+.latihan-card-body::-webkit-scrollbar-thumb { background: #21262d; border-radius: 3px; }
+
+.latihan-card-body pre.latihan-code {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: #c9d1d9 !important;
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Syntax Highlighting Colors */
+.sql-comment {
+  color: #8b949e !important;
+  font-style: italic;
+}
+
+.sql-keyword {
+  color: #ff7b72 !important;
+  font-weight: 700;
+}
+
+.sql-string {
+  color: #a5d6ff !important;
+}
+
+.sql-type {
+  color: #7ee787 !important;
+}
+
+.sql-function {
+  color: #d2a8ff !important;
+}
+
+.sql-number {
+  color: #79c0ff !important;
+}
+
+.latihan-meta-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #161b22;
+  border-top: 1px solid #21262d;
+  font-size: 11px;
+  color: #8b949e;
+  font-family: var(--font-family);
+}
+
+.latihan-meta-tag {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #238636;
+  color: #fff;
+  font-weight: 800;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+/* Tip Card */
+.tip-card {
+  background: #ffffff;
+  border: 1px solid hsl(220, 15%, 90%);
+  border-radius: 10px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+}
+
+.tip-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.tip-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.tip-body kbd {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: hsl(220, 20%, 93%);
+  border: 1px solid hsl(220, 15%, 85%);
+  color: var(--text-primary);
+}
+
+/* ===== Right Column (Terminal Window & Visual Table) ===== */
+.workspace-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.terminal-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #0d1117 !important;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+  border: 1px solid #21262d;
+  min-height: 280px;
+}
+
+/* Terminal Title Bar */
+.terminal-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: #161b22 !important;
+  border-bottom: 1px solid #21262d;
+  flex-shrink: 0;
+}
+
+.terminal-titlebar-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.terminal-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.terminal-dot.red { background: #ff5f57 !important; }
+.terminal-dot.yellow { background: #febc2e !important; }
+.terminal-dot.green { background: #28c840 !important; }
+
+.terminal-title-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #8b949e !important;
+  margin-left: 6px;
+}
+
+.terminal-titlebar-right {
+  display: flex;
+  gap: 6px;
+}
+
+.terminal-action-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 5px;
+  border: 1px solid #30363d;
+  background: #21262d !important;
+  color: #8b949e !important;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.terminal-action-btn:hover {
+  background: #30363d !important;
+  color: #c9d1d9 !important;
+  border-color: #484f58;
+}
+
+/* Terminal Body */
+.terminal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 18px;
+  font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace !important;
+  font-size: 12.5px;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  background: #0d1117 !important;
+  color: #c9d1d9 !important;
+}
+
+.terminal-body::-webkit-scrollbar { width: 6px; }
+.terminal-body::-webkit-scrollbar-track { background: #0d1117; }
+.terminal-body::-webkit-scrollbar-thumb { background: #21262d; border-radius: 3px; }
+
+.terminal-output {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Terminal Lines */
+.terminal-body .term-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.terminal-body .term-line.welcome { color: #f0c040 !important; font-weight: 700; }
+.terminal-body .term-line.info { color: #8b949e !important; }
+.terminal-body .term-line.success { color: #3fb950 !important; font-weight: 600; }
+.terminal-body .term-line.error { color: #f85149 !important; font-weight: 600; }
+.terminal-body .term-line.query-echo { color: #58d5a0 !important; font-weight: 700; margin-top: 6px; }
+.terminal-body .term-line.separator { height: 4px; }
+.terminal-body .term-line.result-info { color: #d29922 !important; margin-top: 2px; margin-bottom: 4px; font-size: 11.5px; font-weight: 600; }
+
+/* ASCII Table */
+.terminal-body pre.term-table {
+  color: #c9d1d9 !important;
+  background: transparent !important;
+  margin: 4px 0;
+  display: block;
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.45;
+  font-family: 'JetBrains Mono', monospace !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.terminal-body .term-table .table-border { color: #30363d !important; }
+.terminal-body .term-table .table-header { color: #79c0ff !important; font-weight: 700; }
+.terminal-body .term-table .table-data { color: #c9d1d9 !important; }
+.terminal-body .term-table .null-val { color: #484f58 !important; font-style: italic; }
+
+/* Terminal Input Bar */
+.terminal-input-wrap {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  background: #010409 !important;
+  border-top: 1px solid #21262d;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+.terminal-prompt {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 13px;
+  font-weight: 700;
+  color: #3fb950 !important;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.terminal-input {
+  flex: 1;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e6edf3 !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  resize: none;
+  padding: 2px 0;
+  min-height: 22px;
+  caret-color: #3fb950;
+  overflow: hidden;
+}
+
+.terminal-input::placeholder {
+  color: #30363d !important;
+}
+
+.terminal-send-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: linear-gradient(135deg, #238636, #2ea043) !important;
+  color: #fff !important;
+  font-family: var(--font-family);
+  font-size: 11.5px;
+  font-weight: 800;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(35, 134, 54, 0.35);
+}
+
+.terminal-send-btn:hover {
+  background: linear-gradient(135deg, #2ea043, #3fb950) !important;
+  transform: scale(1.03);
+}
+
+/* ===== Result Preview (Visual Table) ===== */
+.result-preview {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  border: 1px solid hsl(220, 15%, 88%);
+  max-height: 220px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.result-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: hsl(220, 20%, 97.5%);
+  border-bottom: 1px solid hsl(220, 15%, 90%);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-primary) !important;
+}
+
+.result-close-btn {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  border: none;
+  background: hsl(220, 20%, 93%);
+  color: var(--text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.result-close-btn:hover {
+  background: hsl(0, 72%, 95%);
+  color: hsl(0, 72%, 51%);
+}
+
+.result-table-wrap {
+  overflow: auto;
+  flex: 1;
+}
+
+.result-table-wrap table.result-visual-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11.5px;
+}
+
+.result-table-wrap .result-visual-table th {
+  padding: 6px 12px;
+  background: hsl(231, 50%, 96%) !important;
+  font-weight: 800;
+  color: hsl(231, 68%, 42%) !important;
+  text-align: left;
+  border-bottom: 2px solid hsl(231, 30%, 88%);
+  position: sticky;
+  top: 0;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.result-table-wrap .result-visual-table td {
+  padding: 6px 12px;
+  border-bottom: 1px solid hsl(220, 15%, 94%);
+  color: var(--text-primary) !important;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  background: #fff !important;
+}
+
+.result-table-wrap .result-visual-table tr:hover td {
+  background: hsl(231, 68%, 52%, 0.04) !important;
+}
+
+.result-table-wrap .result-visual-table .null-cell {
+  color: hsl(220, 10%, 70%) !important;
+  font-style: italic;
+}
+
+/* ===== Responsive Breakpoint ===== */
+@media (max-width: 960px) {
+  .editor-page {
+    height: auto;
+    max-height: none;
+    overflow: auto;
+  }
+  .sql-workspace {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+  }
+  .workspace-left {
+    overflow: visible;
+  }
+  .latihan-card {
+    min-height: 340px;
+  }
+  .terminal-window {
+    min-height: 400px;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <div class="editor-page">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-spinner"></div>
+      <p style="color:var(--text-secondary);font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;">Menyiapkan SQL Engine & Database…</p>
+    </div>
+
+    <div id="app-content" style="display: none;">
+
+      <!-- Header Topbar -->
+      <header class="sql-header">
+        <div class="sql-header-left">
+          <a href="beranda.html" class="header-back-btn" title="Kembali ke Beranda">
+            <span>←</span>
+          </a>
+          <div class="header-brand">
+            <div class="header-brand-icon">
+              <img src="assets/images/3d-icons/laptop.png" alt="" style="width:26px;height:26px;object-fit:contain;">
+            </div>
+            <div>
+              <div class="header-brand-title">Editor SQL Interaktif</div>
+              <div class="header-brand-sub">Praktik Ngoding SQL Langsung di Browser • SMKN 1 Sintuk Toboh Gadang</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sql-header-right">
+          <div class="db-status-pill" id="db-status-pill">
+            <span class="db-status-dot loading" id="db-dot"></span>
+            <span id="db-status-text">Memuat database…</span>
+          </div>
+          <button class="header-btn" id="btn-reset" title="Reset database ke kondisi awal">
+            <span>🔄</span> Reset Database
+          </button>
+        </div>
+      </header>
+
+      <!-- Context banner (from kegiatan 3) -->
+      <div class="context-banner" id="context-banner">
+        <img src="assets/images/3d-icons/book.png" style="width:20px;height:20px;object-fit:contain;" alt="">
+        <div>
+          <strong>Mode Praktik Kegiatan Belajar 3:</strong> Selesaikan latihan query di bawah ini, lalu kembali ke
+          <a href="kegiatan/kegiatan-3.html">Kegiatan 3</a> untuk melanjutkan.
+        </div>
+      </div>
+
+      <!-- Main Two-Column Workspace -->
+      <div class="sql-workspace">
+
+        <!-- Left Column: Soal Latihan SQL Saja -->
+        <aside class="workspace-left">
+          
+          <!-- Panel Soal Latihan SQL (Full Height) -->
+          <div class="latihan-card">
+            <div class="latihan-card-header">
+              <div class="latihan-title-wrap">
+                <img src="assets/images/3d-icons/pencil.png" alt="" style="width:22px;height:22px;object-fit:contain;">
+                <span class="latihan-sql-title">📝 Soal Latihan SQL</span>
+              </div>
+            </div>
+
+            <div class="latihan-card-body" id="latihan-sql-body">
+              <div style="text-align:center;padding:32px;color:#8b949e;font-size:13px;">
+                <p style="margin:0 0 4px 0;font-weight:700;">Memuat soal latihan...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Keyboard Shortcuts Tip -->
+          <div class="tip-card">
+            <div class="tip-header">
+              <img src="assets/images/3d-icons/bulb.png" alt="" style="width:16px;height:16px;object-fit:contain;">
+              <span>Shortcut Keyboard</span>
+            </div>
+            <div class="tip-body">
+              <span><kbd>Enter</kbd> Jalankan query</span>
+              <span><kbd>Shift+Enter</kbd> Baris baru</span>
+              <span><kbd>↑</kbd> <kbd>↓</kbd> Riwayat perintah</span>
+            </div>
+          </div>
+
+        </aside>
+
+        <!-- Right Column: Interactive Terminal & Table Output -->
+        <main class="workspace-right">
+          
+          <!-- Terminal Window -->
+          <div class="terminal-window">
+            <!-- Terminal Title Bar -->
+            <div class="terminal-titlebar">
+              <div class="terminal-titlebar-left">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <span class="terminal-title-text">MySQL Command Line (Interactive Terminal)</span>
+              </div>
+              <div class="terminal-titlebar-right">
+                <button class="terminal-action-btn" id="btn-clear" title="Bersihkan riwayat layar terminal">🧹 Bersihkan Layar</button>
+              </div>
+            </div>
+
+            <!-- Terminal Output Area -->
+            <div class="terminal-body" id="terminal-body">
+              <div class="terminal-output" id="terminal-output">
+                <!-- Terminal Lines Rendered by JS -->
+              </div>
+            </div>
+
+            <!-- Terminal Input Prompt -->
+            <div class="terminal-input-wrap">
+              <span class="terminal-prompt">mysql&gt;&nbsp;</span>
+              <textarea
+                id="query-input"
+                class="terminal-input"
+                rows="1"
+                placeholder="Ketik perintah SQL di sini lalu tekan Enter..."
+                spellcheck="false"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+              ></textarea>
+              <button class="terminal-send-btn" id="btn-run" title="Jalankan Perintah SQL (Enter)">
+                <span>▶ Jalankan</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Result Visual Table Preview -->
+          <div class="result-preview" id="result-preview" style="display:none;">
+            <div class="result-preview-header">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <img src="assets/images/3d-icons/chart.png" alt="" style="width:18px;height:18px;object-fit:contain;">
+                <span>Hasil Query — Format Tabel Grid</span>
+              </div>
+              <button class="result-close-btn" id="result-close-btn" title="Tutup pratinjau tabel">✕</button>
+            </div>
+            <div class="result-table-wrap" id="result-table-wrap">
+              <!-- Visual Table Rendered by JS -->
+            </div>
+          </div>
+
+        </main>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- sql.js WebAssembly Engine -->
+  <script src="assets/lib/sql/sql-wasm.js"></script>
+
+  <!-- Auth guard -->
+  <script type="module">
+    import { authReady } from "./assets/js/auth-guard.js";
+
+    authReady.then(() => {
+      document.getElementById("loading-screen").style.display = "none";
+      document.getElementById("app-content").style.display = "flex";
+      document.getElementById("app-content").style.flexDirection = "column";
+      document.getElementById("app-content").style.height = "100vh";
+    }).catch(err => {
+      console.warn("[EditorSQL] Auth notice:", err);
+      document.getElementById("loading-screen").style.display = "none";
+      document.getElementById("app-content").style.display = "flex";
+      document.getElementById("app-content").style.flexDirection = "column";
+      document.getElementById("app-content").style.height = "100vh";
+    });
+  </script>
+
+  <!-- Editor SQL JS Logic -->
+  <script src="assets/js/editor-sql.js?v=99"></script>
+
+</body>
+</html>
