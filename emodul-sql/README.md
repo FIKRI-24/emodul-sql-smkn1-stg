@@ -42,9 +42,9 @@ Aplikasi ini sudah di-hosting secara publik dan dapat diakses langsung melalui p
 
 ---
 
-## 💻 Panduan Menjalankan di Laptop Klien (Secara Lokal)
+## 💻 Panduan Menjalankan di Laptop (Secara Lokal)
 
-Proyek ini dapat dijalankan secara lokal di laptop/komputer Anda dengan mengikuti salah satu metode di bawah ini:
+Proyek ini dapat dijalankan secara lokal di laptop/komputer dengan mengikuti salah satu metode di bawah ini:
 
 ### ⚠️ Catatan Penting Sebelum Memulai:
 > Karena aplikasi ini menggunakan **JavaScript ES Modules** (import/export) dan file **WebAssembly (.wasm)**, file **tidak dapat dibuka langsung dengan cara klik ganda (double-click) index.html** (akan diblokir oleh kebijakan keamanan CORS browser). Anda wajib menjalankannya melalui *local web server* seperti panduan di bawah.
@@ -125,8 +125,6 @@ Untuk keperluan demonstrasi atau pengujian, Anda dapat menggunakan akun yang tel
 `	ext
 emodul-sql-smkn1-stg/
 ├── README.md                          # Dokumentasi panduan proyek
-├── PRD_E-Modul_SQL_Interaktif.md      # Product Requirement Document (Acuan Proposal)
-├── Implementation_Playbook_Agent_Prompts.md
 └── emodul-sql/                        # Direktori aplikasi web utama
     ├── index.html                     # Halaman landing / cover e-modul
     ├── login.html                     # Halaman login & registrasi
@@ -137,7 +135,7 @@ emodul-sql-smkn1-stg/
     ├── hasil-evaluasi.html            # Halaman hasil & pembahasan kuis
     ├── guru.html                      # Panel pengelolaan guru & rekap nilai
     ├── panduan.html                   # Petunjuk penggunaan e-modul
-    ├── profil-pengembang.html         # Profil tim pengembang
+    ├── profil-pengembang.html         # Profil tim pengembang & pembimbing
     ├── firebase.json                  # Konfigurasi Firebase Hosting & Firestore
     ├── firestore.rules                # Aturan keamanan database Firestore
     ├── kegiatan/                      # Modul kegiatan belajar
@@ -154,8 +152,11 @@ emodul-sql-smkn1-stg/
 
 ---
 
-## 👨‍💻 Pengembang & Hak Cipta
+## 👤 Informasi Pengembang & Institusi
 
-* **Klien / Peneliti:** Okfiqha Risdawati (Pendidikan Informatika - UPGRISBA)
-* **Pengembang Aplikasi:** Fikri Arrahman
-* **Instansi Mitra:** SMK Negeri 1 Sintuk Toboh Gadang
+* **Peneliti / Pengembang:** Okfiqha Risdawati (NIM 2201100058)
+* **Program Studi:** Pendidikan Informatika — Fakultas Sains & Teknologi, Universitas PGRI Sumatera Barat
+* **Sekolah Mitra:** SMK Negeri 1 Sintuk Toboh Gadang
+* **Dosen Pembimbing:**
+  1. Dr. Adlia Alfiriani, M.Pd.
+  2. Herisvan Hendra, S.Pd., M.Pd.T.
