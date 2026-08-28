@@ -47,65 +47,63 @@ authReady
   .then(async (user) => {
     userData = user;
 
-    // 1. Cek Prasyarat: Siswa WAJIB menyelesaikan Kegiatan 1, 2, dan 3
+    // 1. Cek Prasyarat & Fetch Data Kuis secara PARALEL
+    const progresRef = doc(db, "progres", user.uid);
+    const kuisRef = doc(db, "kuis", KUIS_ID);
+
+    const [progresSnap, kuisSnap] = await Promise.all([
+      user.role !== "guru" ? getDoc(progresRef).catch(() => null) : Promise.resolve(null),
+      getDoc(kuisRef).catch(() => null)
+    ]);
+
     if (user.role !== "guru") {
-      try {
-        const progresRef = doc(db, "progres", user.uid);
-        const progresSnap = await getDoc(progresRef);
-        let k1 = false, k2 = false, k3 = false;
-        if (progresSnap.exists()) {
-          const pData = progresSnap.data();
-          k1 = !!pData.kegiatan1Selesai;
-          k2 = !!pData.kegiatan2Selesai;
-          k3 = !!pData.kegiatan3Selesai;
-        }
+      let k1 = false, k2 = false, k3 = false;
+      if (progresSnap && progresSnap.exists()) {
+        const pData = progresSnap.data();
+        k1 = !!pData.kegiatan1Selesai;
+        k2 = !!pData.kegiatan2Selesai;
+        k3 = !!pData.kegiatan3Selesai;
+      }
 
-        if (!k1 || !k2 || !k3) {
-          loadingScreen.style.display = "none";
-          appContent.style.display = "block";
-          evalIntro.style.display = "none";
-          if (evalLocked) {
-            evalLocked.style.display = "block";
+      if (!k1 || !k2 || !k3) {
+        loadingScreen.style.display = "none";
+        appContent.style.display = "block";
+        evalIntro.style.display = "none";
+        if (evalLocked) {
+          evalLocked.style.display = "block";
 
-            const badge1 = document.getElementById("lock-badge-keg1");
-            const badge2 = document.getElementById("lock-badge-keg2");
-            const badge3 = document.getElementById("lock-badge-keg3");
-            const btnResume = document.getElementById("btn-lock-resume-eval");
+          const badge1 = document.getElementById("lock-badge-keg1");
+          const badge2 = document.getElementById("lock-badge-keg2");
+          const badge3 = document.getElementById("lock-badge-keg3");
+          const btnResume = document.getElementById("btn-lock-resume-eval");
 
-            if (badge1) {
-              badge1.className = k1 ? "badge badge-success" : "badge badge-danger";
-              badge1.textContent = k1 ? "✓ Selesai" : "⏳ Belum";
-            }
-            if (badge2) {
-              badge2.className = k2 ? "badge badge-success" : "badge badge-danger";
-              badge2.textContent = k2 ? "✓ Selesai" : "⏳ Belum";
-            }
-            if (badge3) {
-              badge3.className = k3 ? "badge badge-success" : "badge badge-danger";
-              badge3.textContent = k3 ? "✓ Selesai" : "⏳ Belum";
-            }
-
-            if (btnResume) {
-              if (!k1) btnResume.href = "kegiatan/kegiatan-1.html";
-              else if (!k2) btnResume.href = "kegiatan/kegiatan-2.html";
-              else btnResume.href = "kegiatan/kegiatan-3.html";
-            }
+          if (badge1) {
+            badge1.className = k1 ? "badge badge-success" : "badge badge-danger";
+            badge1.textContent = k1 ? "✓ Selesai" : "⏳ Belum";
           }
-          return;
+          if (badge2) {
+            badge2.className = k2 ? "badge badge-success" : "badge badge-danger";
+            badge2.textContent = k2 ? "✓ Selesai" : "⏳ Belum";
+          }
+          if (badge3) {
+            badge3.className = k3 ? "badge badge-success" : "badge badge-danger";
+            badge3.textContent = k3 ? "✓ Selesai" : "⏳ Belum";
+          }
+
+          if (btnResume) {
+            if (!k1) btnResume.href = "kegiatan/kegiatan-1.html";
+            else if (!k2) btnResume.href = "kegiatan/kegiatan-2.html";
+            else btnResume.href = "kegiatan/kegiatan-3.html";
+          }
         }
-      } catch (errProg) {
-        console.warn("[Evaluasi] Gagal cek progres siswa:", errProg);
+        return;
       }
     }
-
-    // 2. Fetch kuis dari Firestore
-    const kuisRef = doc(db, "kuis", KUIS_ID);
-    const kuisSnap = await getDoc(kuisRef);
 
     loadingScreen.style.display = "none";
     appContent.style.display = "block";
 
-    if (!kuisSnap.exists()) {
+    if (!kuisSnap || !kuisSnap.exists()) {
       evalIntro.style.display = "none";
       evalError.style.display = "block";
       return;

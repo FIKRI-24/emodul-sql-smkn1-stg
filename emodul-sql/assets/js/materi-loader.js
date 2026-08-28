@@ -15,11 +15,24 @@ import {
 } from "./firebase-config.js";
 
 /**
- * Fetch semua materi untuk kegiatan tertentu, diurutkan.
+ * Fetch semua materi untuk kegiatan tertentu, diurutkan (dengan Smart Cache).
  * @param {number} kegiatanKe — 1, 2, atau 3
  * @returns {Promise<Array>} array dokumen materi
  */
 export async function loadMateri(kegiatanKe) {
+  const cacheKey = `cache_materi_${kegiatanKe}`;
+  try {
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    // fallback to network
+  }
+
   try {
     const q = query(
       collection(db, "materi"),
@@ -33,6 +46,9 @@ export async function loadMateri(kegiatanKe) {
     });
 
     list.sort((a, b) => (a.urutan || 0) - (b.urutan || 0));
+    try {
+      sessionStorage.setItem(cacheKey, JSON.stringify(list));
+    } catch (e) {}
     return list;
   } catch (err) {
     console.error(`[MateriLoader] Gagal load materi kegiatan ${kegiatanKe}:`, err);
@@ -65,14 +81,26 @@ export async function loadVideos(materiId) {
 }
 
 /**
- * Fetch semua video untuk seluruh materi dalam satu kegiatan.
- * Mendukung query kegiatanKe, fallback materiId, dan fallback scan ID dokumen.
+ * Fetch semua video untuk seluruh materi dalam satu kegiatan (dengan Smart Cache).
+ * Mendukung query kegiatanKe, fallback materiId, dan fallback scan ID dokumen secara paralel.
  * @param {number} kegiatanKe
  * @param {Array} materiArray
  * @returns {Promise<Array>}
  */
 export async function loadAllVideos(kegiatanKe, materiArray = []) {
   const kNum = Number(kegiatanKe) || 1;
+  const cacheKey = `cache_video_${kNum}`;
+
+  try {
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (e) {}
+
   const videoMap = new Map();
 
   // 1. Query utama: where("kegiatanKe", "==", kNum)
@@ -89,21 +117,19 @@ export async function loadAllVideos(kegiatanKe, materiArray = []) {
     console.warn("[MateriLoader] Query video by kegiatanKe error:", err);
   }
 
-  // 2. Query fallback: Berdasarkan ID materi yang aktif dalam kegiatan ini
-  if (materiArray && materiArray.length > 0) {
-    for (const materi of materiArray) {
-      try {
-        const vids = await loadVideos(materi.id);
-        if (vids && vids.length > 0) {
-          vids.forEach((v) => {
-            if (!videoMap.has(v.id)) {
-              videoMap.set(v.id, v);
-            }
-          });
+  // 2. Query fallback paralel: Berdasarkan ID materi yang aktif dalam kegiatan ini
+  if (videoMap.size === 0 && materiArray && materiArray.length > 0) {
+    try {
+      const videoResults = await Promise.all(
+        materiArray.map((materi) => loadVideos(materi.id).catch(() => []))
+      );
+      videoResults.flat().forEach((v) => {
+        if (v && v.id && !videoMap.has(v.id)) {
+          videoMap.set(v.id, v);
         }
-      } catch (err) {
-        console.warn(`[MateriLoader] Fallback loadVideos(${materi.id}) error:`, err);
-      }
+      });
+    } catch (err) {
+      console.warn("[MateriLoader] Fallback loadVideos parallel error:", err);
     }
   }
 
@@ -136,6 +162,11 @@ export async function loadAllVideos(kegiatanKe, materiArray = []) {
 
   const result = Array.from(videoMap.values());
   result.sort((a, b) => (Number(a.urutan) || 0) - (Number(b.urutan) || 0));
+
+  try {
+    sessionStorage.setItem(cacheKey, JSON.stringify(result));
+  } catch (e) {}
+
   return result;
 }
 
@@ -162,22 +193,49 @@ export async function loadLatihan(materiId) {
 }
 
 /**
- * Fetch semua latihan untuk seluruh sub-materi dalam satu kegiatan.
+ * Fetch semua latihan untuk seluruh sub-materi dalam satu kegiatan (dengan Smart Cache & Paralel).
  * @param {number} kegiatanKe
  * @param {Array} materiArray
  * @returns {Promise<Array>} array objek latihan
  */
-export async function loadAllLatihan(kegiatanKe, materiArray) {
-  const allLatihan = [];
-  for (const materi of materiArray) {
-    const lat = await loadLatihan(materi.id);
-    if (lat && lat.soal && lat.soal.length > 0) {
-      allLatihan.push({
-        ...lat,
-        materiJudul: materi.judul
-      });
+export async function loadAllLatihan(kegiatanKe, materiArray = []) {
+  const kNum = Number(kegiatanKe) || 1;
+  const cacheKey = `cache_latihan_${kNum}`;
+
+  try {
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
     }
-  }
+  } catch (e) {}
+
+  if (!materiArray || materiArray.length === 0) return [];
+
+  // Fetch parallel all latihan for each materi
+  const latihanResults = await Promise.all(
+    materiArray.map(async (materi) => {
+      try {
+        const lat = await loadLatihan(materi.id);
+        if (lat && lat.soal && lat.soal.length > 0) {
+          return {
+            ...lat,
+            materiJudul: materi.judul
+          };
+        }
+      } catch (e) {}
+      return null;
+    })
+  );
+
+  const allLatihan = latihanResults.filter(Boolean);
+
+  try {
+    sessionStorage.setItem(cacheKey, JSON.stringify(allLatihan));
+  } catch (e) {}
+
   return allLatihan;
 }
 

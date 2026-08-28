@@ -111,10 +111,14 @@ authReady
 
 // ---- Load All Data ----
 async function loadAllData() {
-
   try {
-    // 1. Fetch all users
-    const usersSnap = await getDocs(collection(db, "users"));
+    // 1. Fetch all users, progres, and hasilKuis secara PARALEL
+    const [usersSnap, progresSnap, hasilSnap] = await Promise.all([
+      getDocs(collection(db, "users")),
+      getDocs(collection(db, "progres")),
+      getDocs(collection(db, "hasilKuis"))
+    ]);
+
     allSiswaList = [];
     usersSnap.forEach((d) => {
       const u = { uid: d.id, ...d.data() };
@@ -126,20 +130,17 @@ async function loadAllData() {
     // Sort by nama
     allSiswaList.sort((a, b) => (a.nama || "").localeCompare(b.nama || ""));
 
-    // 2. Fetch all progres
-    const progresSnap = await getDocs(collection(db, "progres"));
     allProgresMap = {};
     progresSnap.forEach((d) => {
       allProgresMap[d.id] = d.data();
     });
 
-    // 3. Fetch all hasilKuis
-    const hasilSnap = await getDocs(collection(db, "hasilKuis"));
     allHasilMap = {};
     hasilSnap.forEach((d) => {
       const data = d.data();
-      if (data.uid) {
-        allHasilMap[data.uid] = data;
+      const userKey = data.uid || data.userId;
+      if (userKey) {
+        allHasilMap[userKey] = data;
       }
     });
 
@@ -149,11 +150,14 @@ async function loadAllData() {
     renderTableProgres();
     renderTableHasil();
 
-    // Load kuis, materi, video & listeners
-    await loadKuisData();
-    await loadMateriData();
+    // Load kuis, materi, video secara paralel
+    await Promise.all([
+      loadKuisData().catch(console.warn),
+      loadMateriData().catch(console.warn),
+      loadVideoData().catch(console.warn)
+    ]);
+
     setupMateriEventListeners();
-    await loadVideoData();
     setupVideoEventListeners();
     setupHasilEventListeners();
 

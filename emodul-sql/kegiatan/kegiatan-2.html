@@ -297,15 +297,11 @@
       });
 
     async function loadPageData(userData, isGuru = false, pData = {}) {
-      // 1. Fetch Materi
+      // 1. Fetch Materi terlebih dahulu & langsung render
       const materiList = await loadMateri(KEGIATAN_KE);
       renderMateriHtml(materiList, "materi-container");
 
-      // 2. Fetch Video
-      const videoList = await loadAllVideos(KEGIATAN_KE, materiList);
-      renderVideoHtml(videoList, "video-container");
-
-      // 3. Status Awal Nilai Latihan
+      // 2. Status Awal Nilai Latihan
       let existingScore = 0;
       let isLolos = false;
 
@@ -323,8 +319,13 @@
 
       updateNavigationState(existingScore, isLolos, isGuru);
 
-      // 4. Fetch Latihan
-      const latihanList = await loadAllLatihan(KEGIATAN_KE, materiList);
+      // 3. Fetch Video & Latihan secara PARALEL untuk kecepatan maksimal
+      const [videoList, latihanList] = await Promise.all([
+        loadAllVideos(KEGIATAN_KE, materiList),
+        loadAllLatihan(KEGIATAN_KE, materiList)
+      ]);
+
+      renderVideoHtml(videoList, "video-container");
       renderAllLatihanHtml(latihanList, "latihan-container", KEGIATAN_KE, userData.uid, (skor, lolos) => {
         updateNavigationState(skor, lolos, isGuru);
       });
